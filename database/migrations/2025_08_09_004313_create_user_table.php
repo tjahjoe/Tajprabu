@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('gender', ['l', 'p']);
             // $table->string('email', 100)->unique();
             $table->string('highest_education', 100);
+            $table->text('photo_path');
             $table->timestamps();
 
             $table->foreign('id_role')->references('id_role')->on('role')->onDelete('cascade');

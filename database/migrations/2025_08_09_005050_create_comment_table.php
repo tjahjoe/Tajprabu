@@ -14,15 +14,15 @@ return new class extends Migration {
             $table->id('id_comment');
             $table->unsignedBigInteger('id_article')->index();
             $table->unsignedBigInteger('id_user')->index();
-            $table->unsignedBigInteger('parent_id')->nullable()->index();
-            $table->unsignedBigInteger('reply_id')->nullable()->index();
+            $table->unsignedBigInteger('id_parent')->nullable()->index();
+            $table->unsignedBigInteger('id_reply')->nullable()->index();
             $table->text('comment');
             $table->timestamps();
 
             $table->foreign('id_article')->references('id_article')->on('article')->onDelete('cascade');
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
-            $table->foreign('parent_id')->references('id_comment')->on('comment')->onDelete('cascade');
-            $table->foreign('reply_id')->references('id_comment')->on('comment')->onDelete('cascade');
+            $table->foreign('id_parent')->references('id_comment')->on('comment')->onDelete('cascade');
+            $table->foreign('id_reply')->references('id_comment')->on('comment')->onDelete('cascade');
         });
     }
 
