@@ -17,6 +17,9 @@ Route::get('/', function () {
     return view('app');
 });
 
+Route::get('oauth/{provider}', [\App\Http\Controllers\OauthController::class, 'redirectToProvider']);
+Route::get('oauth/{provider}/callback', [\App\Http\Controllers\OauthController::class, 'handleProviderCallback']);
+
 Route::get('/sendAll', [\App\Http\Controllers\PusherController::class, 'publishToInterests']);
 Route::get('/sendUser', [\App\Http\Controllers\PusherController::class, 'sendNotificationToUser']);
 
