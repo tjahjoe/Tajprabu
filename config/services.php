@@ -43,4 +43,8 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT_URI'),
     ],
 
+    'pusher_beams' => [
+        'instance_id' => env('PUSHER_BEAMS_INSTANCE_ID'),
+    ],
+
 ];

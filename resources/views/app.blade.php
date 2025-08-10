@@ -1,7 +1,7 @@
 <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 <script>
     const beamsClient = new PusherPushNotifications.Client({
-        instanceId: "{{ env('PUSHER_BEAMS_INSTANCE_ID') }}",
+        instanceId: "{{ config('services.pusher_beams.instance_id') }}",
     });
 
     beamsClient.start()
