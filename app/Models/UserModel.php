@@ -18,9 +18,15 @@ class UserModel extends Authenticatable
     protected $hidden = ['password'];
     protected $casts = ['password' => 'hashed', 'birth_date' => 'date'];
 
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(RoleModel::class, 'id_role', 'id_role');
+    }
+
+    public function has_role($kode): bool
+    {
+        return $this->role->kode == $kode;
     }
 
     public function article(): HasMany

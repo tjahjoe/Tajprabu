@@ -19,3 +19,21 @@ Route::get('/', function () {
 
 Route::get('/sendAll', [\App\Http\Controllers\PusherController::class, 'publishToInterests']);
 Route::get('/sendUser', [\App\Http\Controllers\PusherController::class, 'sendNotificationToUser']);
+
+Route::middleware(['authorize:SPR'])->group(function () {
+    Route::get('/super', function () {
+        return view('super');
+    });
+});
+
+Route::middleware(['authorize:ADM'])->group(function () {
+    Route::get('/admin', function () {
+        return view('admin');
+    });
+});
+
+Route::middleware(['authorize:USR'])->group(function () {
+    Route::get('/user', function () {
+        return view('user');
+    });
+});
