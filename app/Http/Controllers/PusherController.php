@@ -9,8 +9,8 @@ class PusherController extends Controller
     public function publishToInterests()
     {
         $beamsClient = new \Pusher\PushNotifications\PushNotifications(array(
-            "instanceId" => env('PUSHER_BEAMS_INSTANCE_ID'),
-            "secretKey"  => env('PUSHER_BEAMS_SECRET_KEY'),
+            "instanceId" => config('services.pusher_beams.instance_id'),
+            "secretKey"  => config('services.pusher_beams.secret_key'),
         ));
 
         $publishResponse = $beamsClient->publishToInterests(
@@ -31,8 +31,8 @@ class PusherController extends Controller
     public function sendNotificationToUser()
     {
         $beamsClient = new \Pusher\PushNotifications\PushNotifications(array(
-            "instanceId" => env('PUSHER_BEAMS_INSTANCE_ID'),
-            "secretKey"  => env('PUSHER_BEAMS_SECRET_KEY'),
+            "instanceId" => config('services.pusher_beams.instance_id'),
+            "secretKey"  => config('services.pusher_beams.secret_key'),
         ));
 
         $publishResponse = $beamsClient->publishToInterests(
