@@ -48,4 +48,9 @@ class UserModel extends Authenticatable
     {
         return $this->hasMany(ViewModel::class, 'id_user', 'id_user');
     }
+
+    public function poster(): HasMany
+    {
+        return $this->hasMany(PosterModel::class, 'id_user', 'id_user');
+    }
 }

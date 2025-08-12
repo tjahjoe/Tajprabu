@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('view', function (Blueprint $table) {
-            $table->id('id_view');
-            $table->unsignedBigInteger('id_article')->index();
+        Schema::create('poster', function (Blueprint $table) {
+            $table->id('id_poster');
             $table->unsignedBigInteger('id_user')->index();
-            $table->timestamps();
+            $table->text('path');
+            $table->enum('status',['pending', 'approved', 'rejected'])->default('pending');
+            $table->date('date');
 
-            $table->foreign('id_article')->references('id_article')->on('article')->onDelete('cascade');
+            $table->timestamps();
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('view');
+        Schema::dropIfExists('poster');
     }
 };

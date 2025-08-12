@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->text('article');
             $table->enum('status',['pending', 'approved', 'rejected'])->default('pending');
+            $table->integer('view')->nullable();
             $table->timestamps();
 
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
