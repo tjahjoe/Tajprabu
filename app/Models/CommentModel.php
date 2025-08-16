@@ -30,9 +30,4 @@ class CommentModel extends Model
     {
         return $this->belongsTo(self::class, 'id_parent', 'id_comment');
     }   
-
-    public function reply()
-    {
-        return $this->belongsTo(self::class, 'id_reply', 'id_comment');
-    }
 }
