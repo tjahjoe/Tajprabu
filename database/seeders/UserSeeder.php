@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use DB;
+use Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,7 +18,7 @@ class UserSeeder extends Seeder
              [
                 'id_role' => 1,
                 'email' => 'super@example.com',
-                'password' => 'supert123',
+                'password' =>  Hash::make('super123'),
                 'name' => 'Tamu Website',
                 'address' => 'Jl. Melati No. 3',
                 'phone_number' => '081234567892',
@@ -31,7 +32,7 @@ class UserSeeder extends Seeder
             [
                 'id_role' => 2, 
                 'email' => 'admin@example.com',
-                'password' => 'admin123', 
+                'password' => Hash::make('admin123'),
                 'name' => 'Admin Utama',
                 'address' => 'Jl. Merdeka No. 1',
                 'phone_number' => '081234567890',
@@ -45,7 +46,7 @@ class UserSeeder extends Seeder
             [
                 'id_role' => 3, 
                 'email' => 'user@example.com',
-                'password' => 'user123',
+                'password' => Hash::make('user123'),
                 'name' => 'Pengguna Biasa',
                 'address' => 'Jl. Mawar No. 2',
                 'phone_number' => '081234567891',

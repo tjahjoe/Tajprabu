@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_user');
             $table->unsignedBigInteger('id_role')->unique()->index();
             $table->string('email', 100)->unique();
-            $table->string('password', 20);
+            $table->string('password');
             $table->string('name', 100);
             $table->text('address');
             $table->string('phone_number', 30)->unique();

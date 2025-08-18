@@ -3,6 +3,7 @@
 use App\Http\Controllers\OauthController;
 use App\Http\Controllers\PusherController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\User\ArticleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('cloud');
 });
+
+Route::get('/article', [ArticleController::class, 'getAllArticle']);
 
 Route::post('/upload', [UploadController::class, 'upload']);
 
