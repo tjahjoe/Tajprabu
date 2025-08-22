@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CommentModel extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'comment';
 
     protected $primaryKey = 'id_comment';
 
-    protected $fillable = ['id_article', 'id_user', 'id_parent', 'id_reply', 'comment'];
+    protected $fillable = ['id_article', 'id_user', 'id_parent', 'comment'];
 
     public function article()
     {

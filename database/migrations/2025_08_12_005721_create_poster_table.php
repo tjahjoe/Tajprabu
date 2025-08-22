@@ -16,10 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user')->index();
             $table->text('path');
             $table->enum('status',['pending', 'approved', 'rejected'])->default('pending');
-            $table->enum('status_active',['active', 'nonactive'])->default('active');
-            $table->date('date');
-
+            // $table->enum('status_active',['active', 'nonactive'])->default('nonactive');
             $table->timestamps();
+            $table->softDeletes();
+
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
         });
     }

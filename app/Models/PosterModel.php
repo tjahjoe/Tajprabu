@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PosterModel extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'poster';
 
     protected $primaryKey = 'id_poster';
 
-    protected $fillable = ['id_user', 'path', 'status', 'date'];
+    protected $fillable = ['id_user', 'path', 'status'];
 
     public function user(): BelongsTo
     {

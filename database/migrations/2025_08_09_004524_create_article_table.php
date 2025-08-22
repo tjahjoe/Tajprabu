@@ -14,15 +14,17 @@ return new class extends Migration
         Schema::create('article', function (Blueprint $table) {
             $table->id('id_article');
             $table->unsignedBigInteger('id_user')->index();
-            $table->unsignedBigInteger('status_changed_by')->nullable()->index();
-            $table->date('date');
+            $table->text('kode')->unique();
+            $table->string('title', 100);
+            // $table->unsignedBigInteger('status_changed_by')->nullable()->index();
             $table->text('article');
             $table->enum('status',['pending', 'approved', 'rejected'])->default('pending');
-            $table->integer('view')->nullable();
+            $table->integer('view')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
-            $table->foreign('status_changed_by')->references('id_user')->on('user')->onDelete('cascade');
+            // $table->foreign('status_changed_by')->references('id_user')->on('user')->onDelete('cascade');
         });
     }
 

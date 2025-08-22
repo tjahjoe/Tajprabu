@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('tag', function (Blueprint $table) {
             $table->id('id_tag');
-            $table->string('tag', 50);
+            $table->string('kode', 70)->unique();
+            $table->string('tag', 50)->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

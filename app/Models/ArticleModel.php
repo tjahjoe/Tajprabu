@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ArticleModel extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'article';
     protected $primaryKey = 'id_article';
-    protected $fillable = ['id_user', 'status_changed_by', 'date', 'article', 'status'];
+
+    protected $fillable = ['id_user', 'kode' ,'title', 'article', 'status', 'view'];
 
     public function user()
     {

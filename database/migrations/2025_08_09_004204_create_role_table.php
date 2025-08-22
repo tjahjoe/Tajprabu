@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('kode', 5)->unique();
             $table->string('role', 20)->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.8",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "pusher/pusher-push-notifications": "^2.0",
         "tymon/jwt-auth": "^2.2"
     },

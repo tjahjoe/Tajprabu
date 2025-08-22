@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_article')->index();
             $table->unsignedBigInteger('id_topic')->index();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('id_article')->references('id_article')->on('article')->onDelete('cascade');
             $table->foreign('id_topic')->references('id_topic')->on('topic')->onDelete('cascade');

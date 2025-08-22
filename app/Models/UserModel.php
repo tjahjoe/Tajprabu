@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class UserModel extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public function getJWTIdentifier()
     {
@@ -25,11 +26,9 @@ class UserModel extends Authenticatable implements JWTSubject
 
     protected $table = 'user';
     protected $primaryKey = 'id_user';
-    protected $fillable = ['id_role', 'name', 'password', 'address', 'phone_number', 'birth_date', 'gender', 'highest_education', 'photo_path', 'username'];
+    protected $fillable = ['id_role','email', 'password', 'name', 'address', 'phone_number', 'birth_date', 'gender', 'highest_education', 'photo_path'];
     protected $hidden = ['password'];
-    protected $casts = ['password' => 'hashed', 'birth_date' => 'date'];
-
-
+    protected $casts = ['password' => 'hashed'];
     public function role(): BelongsTo
     {
         return $this->belongsTo(RoleModel::class, 'id_role', 'id_role');
@@ -63,5 +62,15 @@ class UserModel extends Authenticatable implements JWTSubject
     public function poster(): HasMany
     {
         return $this->hasMany(PosterModel::class, 'id_user', 'id_user');
+    }
+
+    public function log(): HasMany
+    {
+        return $this->hasMany(LogModel::class, 'id_user', 'id_user');
+    }
+
+    public function notification(): HasMany
+    {
+        return $this->hasMany(NotificationModel::class, 'id_user', 'id_user');
     }
 }

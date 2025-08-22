@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('highest_education', 100);
             $table->text('photo_path');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('id_role')->references('id_role')->on('role')->onDelete('cascade');
         });
