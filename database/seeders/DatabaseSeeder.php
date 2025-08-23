@@ -26,7 +26,6 @@ class DatabaseSeeder extends Seeder
             TagSeeder::class,
             ArticleSeeder::class,
             ImageSeeder::class,
-            TopicArticleSeeder::class,
             TagArticleSeeder::class,
             PosterSeeder::class,
             CommentSeeder::class,

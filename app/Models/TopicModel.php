@@ -17,6 +17,6 @@ class TopicModel extends Model
 
     public function article()
     {
-        return $this->hasMany(TopicArticleModel::class, 'id_topic', 'id_topic');
+        return $this->hasMany(ArticleModel::class, 'id_topic', 'id_topic');
     }
 }

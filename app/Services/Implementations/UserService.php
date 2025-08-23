@@ -42,7 +42,7 @@ class UserService implements UserServiceInterface
     public function updateUser($id, UserRequest $request)
     {
         $data = $request->only([
-            'role_id',
+            'id_role',
             'email',
             'name',
             'address',

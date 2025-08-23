@@ -15,7 +15,7 @@ class TagModel extends Model
     protected $primaryKey = 'id_tag';
     protected $fillable = ['kode', 'tag'];
 
-    public function article()
+    public function tag_article(): HasMany
     {
         return $this->hasMany(TagArticleModel::class, 'id_tag', 'id_tag');
     }

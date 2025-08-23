@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ArticleModel extends Model
@@ -15,7 +16,7 @@ class ArticleModel extends Model
     protected $table = 'article';
     protected $primaryKey = 'id_article';
 
-    protected $fillable = ['id_user', 'kode' ,'title', 'article', 'status', 'view'];
+    protected $fillable = ['id_user', 'kode', 'title', 'article', 'status', 'view'];
 
     public function user()
     {
@@ -37,9 +38,9 @@ class ArticleModel extends Model
         return $this->hasMany(TagArticleModel::class, 'id_article', 'id_article');
     }
 
-    public function topic_article()
+    public function topic()
     {
-        return $this->hasMany(TopicArticleModel::class, 'id_article', 'id_article');
+        return $this->hasOne(TopicModel::class, 'id_topic', 'id_topic');
     }
 
     public function like()
