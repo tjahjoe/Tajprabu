@@ -19,32 +19,47 @@ class TagService implements TagServiceInterface{
         return $this->tagRepository->getAllTags();
     }
 
-    public function getTagByKode($kode)
+    public function getTrendingTags()
     {
-        return $this->tagRepository->getTagByKode($kode);
+        return $this->tagRepository->getTrendingTags();
+    }
+
+    public function getTrendingTagsByArticle($kodeArticle)
+    {
+        return $this->tagRepository->getTrendingTagsByArticle($kodeArticle);
+    }
+
+    public function getTagByKode($kodeTag)
+    {
+        return $this->tagRepository->getTagByKode($kodeTag);
+    }
+
+    public function getArticlesByTag($kodeTag)
+    {
+        return $this->tagRepository->getArticlesByTag($kodeTag);
     }
 
     public function createTag(TagRequest $request)
     {
-        $kode = Str::slug($request->tag, '-');
+        $kodeTag = Str::slug($request->tag, '-');
         return $this->tagRepository->createTag([
-            'kode' => $kode,
+            'kode_tag' => $kodeTag,
             'tag' => $request->tag,
         ]);
     }
 
     public function updateTag($id, TagRequest $request)
     {
-        $kode = Str::slug($request->tag, '-');
+        $kodeTag = Str::slug($request->tag, '-');
         return $this->tagRepository->updateTag($id, [
-            'kode' => $kode,
+            'kode_tag' => $kodeTag,
             'tag' => $request->tag,
         ]);
     }
 
-    public function deleteTag($kode)
+    public function deleteTag($id)
     {
-        return $this->tagRepository->deleteTag($kode);
+        return $this->tagRepository->deleteTag($id);
     }
 
     public function getTrashedTags()
@@ -52,14 +67,14 @@ class TagService implements TagServiceInterface{
         return $this->tagRepository->getTrashedTags();
     }
 
-    public function restoreTag($kode)
+    public function restoreTag($id)
     {
-        return $this->tagRepository->restoreTag($kode);
+        return $this->tagRepository->restoreTag($id);
     }
 
-    public function destroyTag($kode)
+    public function destroyTag($id)
     {
-        return $this->tagRepository->destroyTag($kode);
+        return $this->tagRepository->destroyTag($id);
     }
 }
 

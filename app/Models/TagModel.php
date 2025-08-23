@@ -19,4 +19,16 @@ class TagModel extends Model
     {
         return $this->hasMany(TagArticleModel::class, 'id_tag', 'id_tag');
     }
+
+     public function article()
+    {
+        return $this->hasManyThrough(
+            ArticleModel::class,
+            TagArticleModel::class,     
+            'id_tag',        
+            'id_article',          
+            'id_tag',         
+            'id_article'       
+        );
+    }
 }

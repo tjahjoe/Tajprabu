@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_article');
             $table->unsignedBigInteger('id_user')->index();
             $table->unsignedBigInteger('id_topic')->index();
-            $table->string('kode', 150)->unique();
+            $table->string('kode_article', 150)->unique();
             $table->string('title', 100);
             $table->text('article');
             $table->enum('status',['pending', 'approved', 'rejected'])->default('pending');

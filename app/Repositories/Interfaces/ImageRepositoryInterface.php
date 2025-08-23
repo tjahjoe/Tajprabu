@@ -4,15 +4,12 @@ namespace App\Repositories\Interfaces;
 
 interface ImageRepositoryInterface
 {
-    public function getAllImages();
 
-    public function getImageById($id);
-
-    public function getImagesByArticleId($articleId);
+    public function getImagesByArticle($idArticle);
 
     public function createImage(array $data);
 
-    public function updateImage($id, array $data);
+    public function getByIds($ids);
 
-    public function deleteImage($id);
+    public function deleteImages(array $id);
 }

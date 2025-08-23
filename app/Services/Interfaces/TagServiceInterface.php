@@ -8,7 +8,13 @@ interface TagServiceInterface
 {
     public function getAllTags();
 
-    public function getTagByKode($kode);
+    public function getTrendingTags();
+
+    public function getTrendingTagsByArticle($kodeArticle);
+
+    public function getTagByKode($kodeTag);
+
+    public function getArticlesByTag($kodeTag);
 
     public function createTag(TagRequest $request);
 

@@ -6,7 +6,13 @@ interface ArticleRepositoryInterface
 {
     public function getAllArticles();
 
-    public function getArticleByKode($kode);
+    public function getTrendingArticles();
+
+    public function getTrendingArticlesByTag($kodeTag);
+
+    public function getTrendingArticlesByTopic($kodeTopic);
+
+    public function getArticleByKode($kodeArticle);
 
     public function createArticle(array $data);
 

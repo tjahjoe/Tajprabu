@@ -8,7 +8,13 @@ interface TopicServiceInterface
 {
     public function getAllTopics();
 
-    public function getTopicByKode($kode);
+    public function getTrendingTopics();
+
+    public function getTrendingTopicsByArticle($kodeArticle);
+
+    public function getTopicByKode($kodeTopic);
+
+    public function getAticlesByTopic($kodeTopic);
 
     public function createTopic(TopicRequest $request);
 

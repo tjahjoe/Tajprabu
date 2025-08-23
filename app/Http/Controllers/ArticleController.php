@@ -4,21 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\Interfaces\ArticleServiceInterface;
+use App\Services\Interfaces\TagServiceInterface;
+use App\Services\Interfaces\TopicServiceInterface;
 use App\Http\Requests\ArticleRequest;
 
 class ArticleController extends Controller
 {
     protected $articleService;
+    protected $tagService;
+    protected $topicService;
 
-    public function __construct(ArticleServiceInterface $articleService)
+    public function __construct(
+        ArticleServiceInterface $articleService,
+        TagServiceInterface $tagService,
+        TopicServiceInterface $topicServiceInterface
+        )
     {
         $this->articleService = $articleService;
+        $this->tagService = $tagService;
+        $this->topicService = $topicServiceInterface;
     }
 
     public function getAllArticles()
     {
         $articles = $this->articleService->getAllArticles();
-        return response()->json($articles);
+        $trendingArticles = $this->articleService->getTrendingArticles();
+        $trendingTags = $this->tagService->getTrendingTags();
+        $trendingTopics = $this->topicService->getTrendingTopics();
+        $trendingTagsByArticle = $this->tagService->getTrendingTagsByArticle($articles[0]->kode_article);
+        $trendingTopicsByArticle = $this->topicService->getTrendingTopicsByArticle($articles[0]->kode_article);
+        
+        return response()->json($trendingTagsByArticle);
     }
 
     public function getArticleByKode($kode)

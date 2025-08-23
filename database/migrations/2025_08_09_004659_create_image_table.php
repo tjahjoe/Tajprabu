@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('path');
             $table->text('description');
             $table->timestamps();
-            $table->softDeletes();
             
             $table->foreign('id_article')->references('id_article')->on('article')->onDelete('cascade');
         });

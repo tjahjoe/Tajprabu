@@ -20,17 +20,32 @@ class ArticleService implements ArticleServiceInterface
         return $this->articleRepository->getAllArticles();
     }
 
-    public function getArticleByKode($kode)
+    public function getTrendingArticles()
     {
-        return $this->articleRepository->getArticleByKode($kode);
+        return $this->articleRepository->getTrendingArticles();
+    }
+
+    public function getTrendingArticlesByTag($kodeTag)
+    {
+        return $this->articleRepository->getTrendingArticlesByTag($kodeTag);
+    }
+
+    public function getTrendingArticlesByTopic($kodeTopic)
+    {
+        return $this->articleRepository->getTrendingArticlesByTopic($kodeTopic);
+    }
+
+    public function getArticleByKode($kodeArticle)
+    {
+        return $this->articleRepository->getArticleByKode($kodeArticle);
     }
 
     public function createArticle(ArticleRequest $request)
     {
-        $kode = Str::slug($request->title, '-');
+        $kodeArticle = Str::slug($request->title, '-');
         return $this->articleRepository->createArticle([
             'id_user' => $request->id_user,
-            'kode' => $kode,    
+            'kode_article' => $kodeArticle,    
             'title' => $request->title,
             'article' => $request->article,
         ]);
@@ -38,10 +53,10 @@ class ArticleService implements ArticleServiceInterface
 
     public function updateArticle($id, ArticleRequest $request)
     {
-        $kode = Str::slug($request->title, '-');
+        $kodeArticle = Str::slug($request->title, '-');
         return $this->articleRepository->updateArticle($id, [
             'id_user' => $request->id_user,
-            'kode' => $kode,
+            'kode_article' => $kodeArticle,
             'title' => $request->title,
             'article' => $request->article,
             'status' => $request->status,

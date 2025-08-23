@@ -7,19 +7,15 @@ use App\Repositories\Interfaces\LikeRepositoryInterface;
 
 class LikeRepository implements LikeRepositoryInterface
 {
-    // public function getAllLikes()
-    // {
-    //     return LikeModel::get();
-    // }
 
-    public function getLikeByUser($id_user)
+    public function getLikeByUser($id)
     {
-        return LikeModel::firstWhere('id_user', $id_user);
+        return LikeModel::firstWhere('id_user', $id);
     }
 
-    public function getLikeByArticle($id_article)
+    public function getLikeByArticle($idArticle)
     {
-        return LikeModel::firstWhere('id_article', $id_article);
+        return LikeModel::firstWhere('id_article', $idArticle);
     }
 
     public function createLike(array $data)

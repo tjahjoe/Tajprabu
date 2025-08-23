@@ -19,25 +19,40 @@ class TopicService implements TopicServiceInterface{
         return $this->topicRepository->getAllTopics();
     }
 
-    public function getTopicByKode($kode)
+    public function getTrendingTopicsByArticle($kodeArticle)
     {
-        return $this->topicRepository->getTopicByKode($kode);
+        return $this->topicRepository->getTrendingTopicsByArticle($kodeArticle);
+    }
+
+    public function getTrendingTopics()
+    {
+        return $this->topicRepository->getTrendingTopics();
+    }
+
+    public function getTopicByKode($kodeTopic)
+    {
+        return $this->topicRepository->getTopicByKode($kodeTopic);
+    }
+
+    public function getAticlesByTopic($kodeTopic)
+    {
+        return $this->topicRepository->getAticlesByTopic($kodeTopic);
     }
 
     public function createTopic(TopicRequest $request)
     {
-        $kode = Str::slug($request->topic, '-');
+        $kodeTopic = Str::slug($request->topic, '-');
         return $this->topicRepository->createTopic([
-            'kode' => $kode,
+            'kode_topic' => $kodeTopic,
             'topic' => $request->topic,
         ]);
     }
 
     public function updateTopic($id, TopicRequest $request)
     {
-        $kode = Str::slug($request->topic, '-');
+        $kodeTopic = Str::slug($request->topic, '-');
         return $this->topicRepository->updateTopic($id, [
-            'kode' => $kode,
+            'kode_topic' => $kodeTopic,
             'topic' => $request->topic,
         ]);
     }

@@ -8,7 +8,13 @@ interface ArticleServiceInterface
 {
     public function getAllArticles();
 
-    public function getArticleByKode($kode);
+    public function getTrendingArticles();
+
+    public function getTrendingArticlesByTopic($kodeTopic);
+
+    public function getTrendingArticlesByTag($kodeTag);
+
+    public function getArticleByKode($kodeArticle);
 
     public function createArticle(ArticleRequest $request);
 
