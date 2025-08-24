@@ -62,11 +62,8 @@ class PosterService implements PosterServiceInterface
 
         return $this->posterRepository->updatePoster($id, $data);
     }
-    public function deletePoster($id, $path)
+    public function deletePoster($id)
     {
-        if ($path) {
-            Storage::disk('s3')->delete($path);
-        }
         return $this->posterRepository->deletePoster($id);
     }
 
@@ -80,8 +77,12 @@ class PosterService implements PosterServiceInterface
         return $this->posterRepository->restorePoster($id);
     }
 
-    public function destroyPoster($id)
+    public function destroyPoster($id, $path)
     {
+        if ($path) {
+            Storage::disk('s3')->delete($path);
+        }
+
         return $this->posterRepository->destroyPoster($id);
     }
 }

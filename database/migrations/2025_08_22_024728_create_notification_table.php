@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('description');
             $table->enum('status',['read', 'unread'])->default('unread');
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
         });

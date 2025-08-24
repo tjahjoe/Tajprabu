@@ -2,10 +2,10 @@
 
 namespace App\Services\Implementations;
 
+use App\Http\Requests\DeleteImageRequest;
 use App\Http\Requests\ImageRequest;
 use App\Repositories\Interfaces\ImageRepositoryInterface;
 use App\Services\Interfaces\ImageServiceInterface;
-use Illuminate\Http\Request;
 use Storage;
 
 class ImageService implements ImageServiceInterface
@@ -26,14 +26,15 @@ class ImageService implements ImageServiceInterface
     public function createImages(ImageRequest $request)
     {
         $files = $request->file('images');
+        $descriptions = $request->descriptions;
         $data = [];
 
-        foreach ($files as $file) {
+        foreach ($files as $i => $file) {
             $path = Storage::disk('s3')->put('posters', $file);
 
             $data[] = $this->imageRepository->createImage([
                 'id_article' => $request->id_article,
-                'description' => $request->description,
+                'description' => $descriptions[$i],
                 'path' => $path,
             ]);
         }
@@ -41,7 +42,7 @@ class ImageService implements ImageServiceInterface
     }
 
 
-    public function deleteImages(Request $request)
+    public function deleteImages(DeleteImageRequest $request)
     {
         $ids = $request->ids;
         if (!$ids || count($ids) === 0) {

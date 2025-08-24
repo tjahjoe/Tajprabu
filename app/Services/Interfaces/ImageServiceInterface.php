@@ -3,7 +3,7 @@
 namespace App\Services\Interfaces;
 
 use App\Http\Requests\ImageRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\DeleteImageRequest;
 
 interface ImageServiceInterface
 {
@@ -11,5 +11,5 @@ interface ImageServiceInterface
 
     public function createImages(ImageRequest $request);
 
-    public function deleteImages(Request $request);
+    public function deleteImages(DeleteImageRequest $request);
 }

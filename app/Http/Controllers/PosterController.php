@@ -45,9 +45,9 @@ class PosterController extends Controller
         return response()->json($poster);
     }
 
-    public function deletePoster($id, $path)
+    public function deletePoster($id)
     {
-        $poster = $this->posterService->deletePoster($id, $path);
+        $poster = $this->posterService->deletePoster($id);
         return response()->json($poster);
     }
 
@@ -64,9 +64,9 @@ class PosterController extends Controller
         return response()->json($poster);
     }
 
-    public function destroyPoster($id)
+    public function destroyPoster($id, $path)
     {
-        $poster = $this->posterService->destroyPoster($id);
+        $poster = $this->posterService->destroyPoster($id, $path);
         return response()->json($poster);
     }
 }

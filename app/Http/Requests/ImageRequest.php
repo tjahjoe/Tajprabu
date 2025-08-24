@@ -24,7 +24,8 @@ class ImageRequest extends FormRequest
     {
         return [
             'id_article' => 'required|exists:article,id_article',
-            'description' => 'nullable|string|max:255',
+            'descriptions' => 'required|array',
+            'descriptions.*' => 'required|string|max:255',
             'images' => 'required|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ];

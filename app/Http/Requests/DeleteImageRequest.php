@@ -5,7 +5,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class CommentRequest extends FormRequest
+class DeleteImageRequest extends FormRequest
 {
     public function authorize()
     {
@@ -23,10 +23,8 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'id_article' => 'required|exists:article,id_article',
-            'id_user' => 'required|exists:user,id_user',
-            'id_parent' => 'nullable|exists:comment,id_comment',
-            'comment' => 'required|string',
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:images,id',
         ];
     }
 }
