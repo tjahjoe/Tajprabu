@@ -14,7 +14,7 @@ class PosterRepository implements PosterRepositoryInterface
 
     public function getPostersByActive($status)
     {
-        return "a";
+        return PosterModel::where('status', $status)->get();
     }
 
     public function getPosterById($id)

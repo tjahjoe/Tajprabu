@@ -32,7 +32,7 @@ class ImageService implements ImageServiceInterface
         $data = [];
 
         foreach ($files as $i => $file) {
-            $path = Storage::disk('s3')->put('posters', $file);
+            $path = Storage::disk('s3')->put('images', $file);
 
             $data[] = $this->imageRepository->createImage([
                 'id_article' => $request->id_article,
@@ -41,6 +41,31 @@ class ImageService implements ImageServiceInterface
             ]);
         }
         return $data;
+    }
+
+    public function updateImage($id, ImageRequest $request)
+    {
+
+        $data = [
+            'id_article' => $request->id_article,
+            'description' => $request->description,
+        ];
+
+        $path = $this->imageRepository->getImageById($id)->path;
+
+        if ($request->hasFile('image')) {
+
+            if ($path) {
+                Storage::disk('s3')->delete($path);
+            }
+
+            $file = $request->file('image');
+            $newPath = Storage::disk('s3')->put('images', $file);
+
+            $data['path'] = $newPath;
+        }
+
+        return $this->imageRepository->updateImage($id, $data);
     }
 
 

@@ -39,9 +39,9 @@ class PosterController extends Controller
         return response()->json($poster);
     }
 
-    public function updatePoster($id, $path, PosterRequest $request)
+    public function updatePoster($id, PosterRequest $request)
     {
-        $poster = $this->posterService->updatePoster($id, $path, $request);
+        $poster = $this->posterService->updatePoster($id, $request);
         return response()->json($poster);
     }
 

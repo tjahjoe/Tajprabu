@@ -14,7 +14,7 @@ interface PosterServiceInterface
 
     public function createPoster(PosterRequest $request);
 
-    public function updatePoster($id, $path, PosterRequest $request);
+    public function updatePoster($id, PosterRequest $request);
 
     public function deletePoster($id);
 

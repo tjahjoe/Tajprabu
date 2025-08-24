@@ -42,13 +42,15 @@ class PosterService implements PosterServiceInterface
         ]);
     }
 
-    public function updatePoster($id, $path, PosterRequest $request)
+    public function updatePoster($id, PosterRequest $request)
     {
-        $data = $this->posterRepository->updatePoster($id, [
+        $data = [
             'id_user' => $request->id_user,
             'status' => $request->status,
             'status_active' => $request->status_active,
-        ]);
+        ];
+
+        $path = $this->posterRepository->getPosterById($id)->path;
 
         if ($request->hasFile('poster')) {
 

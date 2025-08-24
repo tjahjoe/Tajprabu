@@ -11,5 +11,7 @@ interface ImageServiceInterface
 
     public function createImages(ImageRequest $request);
 
+    public  function updateImage($id, ImageRequest $request);
+
     public function deleteImages(DeleteImageRequest $request);
 }

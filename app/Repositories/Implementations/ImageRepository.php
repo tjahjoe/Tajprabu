@@ -12,9 +12,20 @@ class ImageRepository implements ImageRepositoryInterface
         return ImageModel::where('id_article', $idArticle)->get();
     }
 
+    public function getImageById($id)
+    {
+        return ImageModel::find($id);
+    }
+
     public function createImage($data)
     {
         return ImageModel::create($data) ? true : false;
+    }
+
+    public function updateImage($id, $data)
+    {
+        $Image = ImageModel::findOrFail($id);
+        return $Image->update($data) ? true : false;
     }
 
     public function getByIds($ids){
