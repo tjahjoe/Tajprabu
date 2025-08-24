@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
         $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
 
         return [
-            'role_id' => 'required|exists:role,id_role',
+            'id_role' => 'required|exists:role,id_role',
             'email' => $isUpdate ? 'required|email' : 'required|email|unique:user,email',
             'password' => $isUpdate ? 'nullable|string|min:5|max:20' : 'required|string|min:5|max:20',
             'name' => 'required|string|max:100',

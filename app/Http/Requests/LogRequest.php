@@ -5,7 +5,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class DeleteImageRequest extends FormRequest
+class LogRequest extends FormRequest
 {
     public function authorize()
     {
@@ -23,8 +23,8 @@ class DeleteImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'id_images' => 'required|array|min:1',
-            'id_images.*' => 'integer|exists:image,id_image',
+            'id_logs' => 'required|array|min:1',
+            'id_logs.*' => 'integer|exists:log,id_log',
         ];
     }
 }
