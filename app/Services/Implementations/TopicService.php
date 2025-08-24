@@ -4,6 +4,8 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\TopicRequest;
 use App\Repositories\Interfaces\TopicRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\TopicServiceInterface;
 use Str;
 

@@ -4,6 +4,8 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\TagRequest;
 use App\Repositories\Interfaces\TagRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\TagServiceInterface;
 use Str;
 

@@ -4,6 +4,8 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\UserRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\UserServiceInterface;
 
 class UserService implements UserServiceInterface

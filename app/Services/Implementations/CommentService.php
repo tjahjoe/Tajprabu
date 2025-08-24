@@ -4,6 +4,8 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\CommentRequest;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\CommentServiceInterface;
 
 class CommentService implements CommentServiceInterface

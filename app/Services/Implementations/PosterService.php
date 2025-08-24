@@ -4,6 +4,8 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\PosterRequest;
 use App\Repositories\Interfaces\PosterRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\PosterServiceInterface;
 use Storage;
 

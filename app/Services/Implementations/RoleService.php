@@ -4,6 +4,8 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\RoleRequest;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\RoleServiceInterface;
 
 class RoleService implements RoleServiceInterface{

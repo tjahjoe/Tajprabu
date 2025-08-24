@@ -5,6 +5,8 @@ namespace App\Services\Implementations;
 use App\Http\Requests\DeleteImageRequest;
 use App\Http\Requests\ImageRequest;
 use App\Repositories\Interfaces\ImageRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\ImageServiceInterface;
 use Storage;
 

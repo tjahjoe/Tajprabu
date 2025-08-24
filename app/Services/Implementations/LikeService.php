@@ -4,6 +4,8 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\LikeRequest;
 use App\Repositories\Interfaces\LikeRepositoryInterface;
+use App\Repositories\Interfaces\LogRepositoryInterface;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Services\Interfaces\LikeServiceInterface;
 
 class LikeService implements LikeServiceInterface
@@ -15,10 +17,7 @@ class LikeService implements LikeServiceInterface
     {
         $this->likeRepository = $likeRepository;
     }
-    // public function getAllLikes()
-    // {
-    //     return $this->likeRepository->getAllLikes();
-    // }
+    
     public function getLikeByUser($id_user)
     {
         return $this->likeRepository->getLikeByUser($id_user);

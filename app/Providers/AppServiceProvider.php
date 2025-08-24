@@ -3,12 +3,18 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+
 use App\Services\Interfaces\PosterServiceInterface;
 use App\Services\Interfaces\TagServiceInterface;
 use App\Services\Interfaces\TopicServiceInterface;
 use App\Services\Interfaces\RoleServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Services\Interfaces\ArticleServiceInterface;
+use App\Services\Interfaces\ImageServiceInterface;
+use App\Services\Interfaces\LikeServiceInterface;
+use App\Services\Interfaces\CommentServiceInterface;
+use App\Services\Interfaces\NotificationServiceInterface;
+use App\Services\Interfaces\LogServiceInterface;
 
 use App\Services\Implementations\PosterService;
 use App\Services\Implementations\TagService;
