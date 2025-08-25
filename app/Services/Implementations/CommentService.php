@@ -6,15 +6,28 @@ use App\Http\Requests\CommentRequest;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
 use App\Repositories\Interfaces\NotificationRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Interfaces\ArticleRepositoryInterface;
 use App\Services\Interfaces\CommentServiceInterface;
 
 class CommentService implements CommentServiceInterface
 {
     protected $commentRepository;
+    protected $logRepository;
+    protected $notificationRepository;
+    protected $userRepository;
+    protected $articleRepository;
 
-    public function __construct(CommentRepositoryInterface $commentRepository)
-    {
+    public function __construct(
+        CommentRepositoryInterface $commentRepository,
+        LogRepositoryInterface $logRepository,
+        NotificationRepositoryInterface $notificationRepository,
+        UserRepositoryInterface $userRepository
+    ) {
         $this->commentRepository = $commentRepository;
+        $this->logRepository = $logRepository;
+        $this->notificationRepository = $notificationRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function getCommentByArticle($id_article)
@@ -24,17 +37,43 @@ class CommentService implements CommentServiceInterface
 
     public function createComment(CommentRequest $request)
     {
+        $user = $this->userRepository->getUser();
+        $article = $this->articleRepository->getArticleById($request->id_article);
         $data = $request->only([
             'id_article',
-            'id_user',
+            // 'id_user',
             'comment',
         ]);
+
+        $data['id_user'] = $user->id_user;
 
         if ($request->filled('Id_parent')) {
             $data['id_parent'] = $request->id_parent;
         }
 
-        return $this->commentRepository->createComment($data);
+        $comment = $this->commentRepository->createComment($data);
+
+        if ($comment) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Membuat komentar baru',
+                'description' => $user->email . ' Membuat komentar baru',
+            ]);
+            $this->notificationRepository->createNotification([
+                'id_user' => $article->id_user,
+                'activity' => 'Membuat komentar baru',
+                'description' => $user->email . ' Membuat komentar baru',
+            ]);
+
+            if ($request->filled('Id_parent')) {
+                $this->notificationRepository->createNotification([
+                    'id_user' => $request->id_parent,
+                    'activity' => 'Membuat komentar baru',
+                    'description' => $user->email . ' Membuat komentar baru',
+                ]);
+            }
+        }
+
     }
 
 
