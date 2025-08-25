@@ -57,13 +57,15 @@ class TagRepository implements TagRepositoryInterface
     public function updateTag($id, $data)
     {
         $tag = TagModel::findOrFail($id);
-        return $tag->update($data) ? true : false;
+        $tag->update($data);
+        return $tag;
     }
 
     public function deleteTag($id)
     {
         $tag = TagModel::findOrFail($id);
-        return $tag->delete() ? true : false;
+        $tag->delete();
+        return $tag;
     }
 
     public function getTrashedTags()
@@ -74,12 +76,14 @@ class TagRepository implements TagRepositoryInterface
     public function restoreTag($id)
     {
         $tag = TagModel::withTrashed()->findOrFail($id);
-        return $tag->restore() ? true : false;
+        $tag->restore();
+        return $tag;
     }
 
     public function destroyTag($id)
     {
         $tag = TagModel::withTrashed()->findOrFail($id);
-        return $tag->forceDelete() ? true : false;
+        $tag->forceDelete();
+        return $tag;
     }
 }
