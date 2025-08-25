@@ -56,13 +56,15 @@ class TopicRepository implements TopicRepositoryInterface
     public function updateTopic($id, $data)
     {
         $topic = TopicModel::findOrFail($id);
-        return $topic->update($data) ? true : false;
+        $topic->update($data);
+        return $topic;
     }
 
     public function deleteTopic($id)
     {
         $topic = TopicModel::findOrFail($id);
-        return $topic->delete() ? true : false;
+        $topic->delete();
+        return $topic;
     }
 
     public function getTrashedTopics()
@@ -73,12 +75,14 @@ class TopicRepository implements TopicRepositoryInterface
     public function restoreTopic($id)
     {
         $topic = TopicModel::onlyTrashed()->findOrFail($id);
-        return $topic->restore() ? true : false;
+        $topic->restore();
+        return $topic;
     }
 
     public function destroyTopic($id)
     {
         $topic = TopicModel::withTrashed()->findOrFail($id);
-        return $topic->forceDelete() ? true : false;
+        $topic->forceDelete();
+        return $topic;
     }
 }

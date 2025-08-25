@@ -30,9 +30,9 @@ class NotificationService implements NotificationServiceInterface
         return $this->notificationRepository->getNotificationById($id);
     }
 
-    public function createNotificationForAdmin($title, $description)
+    public function createNotificationForRole($role, $title, $description)
     {
-        $admins = $this->userRepository->getUserByRole('Admin');
+        $admins = $this->userRepository->getUserByRole($role);
 
         foreach ($admins as $admin) {
             $this->notificationRepository->createNotification([

@@ -2,19 +2,36 @@
 
 namespace App\Services\Implementations;
 
+use App\Services\Implementations\NotificationService;
+
 use App\Http\Requests\TopicRequest;
 use App\Repositories\Interfaces\TopicRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
 use App\Repositories\Interfaces\NotificationRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\TopicServiceInterface;
 use Str;
 
-class TopicService implements TopicServiceInterface{
+class TopicService implements TopicServiceInterface
+{
+    protected $notificationService;
     protected $topicRepository;
+    protected $logRepository;
+    protected $notificationRepository;
+    protected $userRepository;
 
-    public function __construct(TopicRepositoryInterface $topicRepository)
-    {
+    public function __construct(
+        NotificationService $notificationService,
+        TopicRepositoryInterface $topicRepository,
+        LogRepositoryInterface $logRepository,
+        NotificationRepositoryInterface $notificationRepository,
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->notificationService = $notificationService;
         $this->topicRepository = $topicRepository;
+        $this->logRepository = $logRepository;
+        $this->notificationRepository = $notificationRepository;
+        $this->userRepository = $userRepository;
     }
     public function getAllTopics()
     {
@@ -44,24 +61,87 @@ class TopicService implements TopicServiceInterface{
     public function createTopic(TopicRequest $request)
     {
         $kodeTopic = Str::slug($request->topic, '-');
-        return $this->topicRepository->createTopic([
+        $user = $this->userRepository->getUser();
+
+        $topic = $this->topicRepository->createTopic([
             'kode_topic' => $kodeTopic,
             'topic' => $request->topic,
         ]);
+
+        if ($topic) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Membuat topic baru',
+                'description' => $user->email . ' Membuat topic baru',
+            ]);
+
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Membuat topic baru',
+                $user->email . 'Membuat topic baru'
+            );
+            $this->notificationService->createNotificationForRole(
+                'Admin',
+                'Membuat topic baru',
+                $user->email . 'Membuat topic baru'
+            );
+        }
+        return $topic;
     }
 
     public function updateTopic($id, TopicRequest $request)
     {
         $kodeTopic = Str::slug($request->topic, '-');
-        return $this->topicRepository->updateTopic($id, [
+        $user = $this->userRepository->getUser();
+
+        $topic = $this->topicRepository->updateTopic($id, [
             'kode_topic' => $kodeTopic,
             'topic' => $request->topic,
         ]);
+
+        if ($topic) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Merbarui topic',
+                'description' => $user->email . ' Merbarui topic',
+            ]);
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Merbarui topic',
+                $user->email . ' Merbarui topic'
+            );
+            $this->notificationService->createNotificationForRole(
+                'Admin',
+                'Merbarui topic',
+                $user->email . ' Merbarui topic'
+            );
+        }
+        return $topic;
     }
-    
+
     public function deleteTopic($id)
     {
-        return $this->topicRepository->deleteTopic($id);
+        $user = $this->userRepository->getUser();
+        $topic = $this->topicRepository->deleteTopic($id);
+
+        if ($topic) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus topic',
+                'description' => $user->email . ' Menghapus topic',
+            ]);
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Menghapus topic',
+                $user->email . 'Menghapus topic'
+            );
+            $this->notificationService->createNotificationForRole(
+                'Admin',
+                'Menghapus topic',
+                $user->email . 'Menghapus topic'
+            );
+        }
+        return $topic;
     }
 
     public function getTrashedTopics()
@@ -71,12 +151,51 @@ class TopicService implements TopicServiceInterface{
 
     public function restoreTopic($id)
     {
-        return $this->topicRepository->restoreTopic($id);
+        $user = $this->userRepository->getUser();
+        $topic = $this->topicRepository->restoreTopic($id);
+        if ($topic) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Mengembalikan topic',
+                'description' => $user->email . ' Mengembalikan topic',
+            ]);
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Mengembalikan topic',
+                $user->email . 'Mengembalikan topic'
+            );
+            $this->notificationService->createNotificationForRole(
+                'Admin',
+                'Mengembalikan topic',
+                $user->email . 'Mengembalikan topic'
+            );
+        }
+        return $topic;
+        
     }
 
     public function destroyTopic($id)
     {
-        return $this->topicRepository->destroyTopic($id);
+        $user = $this->userRepository->getUser();
+        $topic = $this->topicRepository->destroyTopic($id);
+        if ($topic) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus permanen topic',
+                'description' => $user->email . ' Menghapus permanen topic',
+            ]);
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Menghapus permanen topic',
+                $user->email . 'Menghapus permanen topic'
+            );
+            $this->notificationService->createNotificationForRole(
+                'Admin',
+                'Menghapus permanen topic',
+                $user->email . 'Menghapus permanen topic'
+            );
+        }
+        return $topic;
     }
 }
 

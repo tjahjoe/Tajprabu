@@ -70,7 +70,8 @@ class PosterService implements PosterServiceInterface
             ]);
 
 
-            $this->notificationService->createNotificationForAdmin(
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
                 'Membuat poster baru',
                 $user->email . 'Membuat poster baru'
                 // 'Membuat poster baru'
@@ -113,7 +114,8 @@ class PosterService implements PosterServiceInterface
                 'description' => $user->email .  ' Merbarui artikel',
             ]);
 
-            $this->notificationService->createNotificationForAdmin(
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
                 'Merbarui artikel',
                 $user->email . ' Merbarui artikel'
                 // 'Merbarui artikel'

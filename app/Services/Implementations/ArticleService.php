@@ -78,7 +78,8 @@ class ArticleService implements ArticleServiceInterface
             ]);
 
 
-            $this->notificationService->createNotificationForAdmin(
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
                 'Membuat artikel baru',
                 $user->email . 'Membuat artikel baru'
             );
@@ -106,7 +107,8 @@ class ArticleService implements ArticleServiceInterface
                 'description' => $user->email .  'Merbarui artikel',
             ]);
 
-            $this->notificationService->createNotificationForAdmin(
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
                 'Merbarui artikel',
                 $user->email . ' Merbarui artikel'
             );

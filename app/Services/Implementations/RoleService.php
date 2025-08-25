@@ -58,7 +58,8 @@ class RoleService implements RoleServiceInterface
                 'activity' => 'Membuat role baru',
                 'description' => $user->email . ' Membuat role baru',
             ]);
-            $this->notificationService->createNotificationForAdmin(
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
                 'Membuat role baru',
                 $user->email . 'Membuat role baru'
             );
@@ -80,7 +81,8 @@ class RoleService implements RoleServiceInterface
                 'activity' => 'Merbarui role',
                 'description' => $user->email . ' Merbarui role',
             ]);
-            $this->notificationService->createNotificationForAdmin(
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
                 'Merbarui role',
                 $user->email . ' Merbarui role'
             );
@@ -99,9 +101,10 @@ class RoleService implements RoleServiceInterface
                 'activity' => 'Menghapus role',
                 'description' => $user->email . ' Menghapus role',
             ]);
-            $this->notificationService->createNotificationForAdmin(
-                'Membuat role baru',
-                $user->email . 'Membuat role baru'
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Menghapus role',
+                $user->email . 'Menghapus role'
             );
         }
         return $role;
@@ -123,9 +126,10 @@ class RoleService implements RoleServiceInterface
                 'activity' => 'Mengembalikan role',
                 'description' => $user->email . ' Mengembalikan role',
             ]);
-            $this->notificationService->createNotificationForAdmin(
-                'Membuat role baru',
-                $user->email . 'Membuat role baru'
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Mengembalikan role',
+                $user->email . 'Mengembalikan role'
             );
         }
         return $role;
@@ -141,9 +145,10 @@ class RoleService implements RoleServiceInterface
                 'activity' => 'Menghapus permanen role',
                 'description' => $user->email . ' Menghapus permanen role',
             ]);
-            $this->notificationService->createNotificationForAdmin(
-                'Membuat role baru',
-                $user->email . 'Membuat role baru'
+            $this->notificationService->createNotificationForRole(
+                'Super Admin',
+                'Menghapus permanen role',
+                $user->email . 'Menghapus permanen role'
             );
         }
         return $role;
