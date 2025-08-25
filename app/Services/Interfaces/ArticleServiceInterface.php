@@ -20,6 +20,8 @@ interface ArticleServiceInterface
 
     public function updateArticle($id, ArticleRequest $request);
 
+    public function updateStatusArticle($id, ArticleRequest $request);
+
     public function deleteArticle($id);
 
     public function getTrashedArticles();

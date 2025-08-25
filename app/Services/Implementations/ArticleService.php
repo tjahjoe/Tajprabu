@@ -3,6 +3,9 @@
 namespace App\Services\Implementations;
 
 use App\Http\Requests\ArticleRequest;
+
+use App\Services\Implementations\NotificationService;
+
 use App\Repositories\Interfaces\ArticleRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
 use App\Repositories\Interfaces\NotificationRepositoryInterface;
@@ -12,17 +15,19 @@ use Str;
 
 class ArticleService implements ArticleServiceInterface
 {
-
+    protected $notificationService;
     protected $articleRepository;
     protected $logRepository;
     protected $notificationRepository;
     protected $userRepository;
     public function __construct(
+        NotificationService $notificationService,
         ArticleRepositoryInterface $articleRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,
         UserRepositoryInterface $userRepository
     ) {
+        $this->notificationService = $notificationService;
         $this->articleRepository = $articleRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;
@@ -53,19 +58,6 @@ class ArticleService implements ArticleServiceInterface
         return $this->articleRepository->getArticleByKode($kodeArticle);
     }
 
-    public function sendNotificationToAdmin($title, $description)
-    {
-        $admins = $this->userRepository->getUserByRole('Admin');
-
-        foreach ($admins as $admin) {
-            $this->notificationRepository->createNotification([
-                'id_user' => $admin->id_user,
-                'title' => $title,
-                'description' => $description,
-            ]);
-        }
-    }
-
     public function createArticle(ArticleRequest $request)
     {
         $kodeArticle = Str::slug($request->title, '-');
@@ -86,7 +78,7 @@ class ArticleService implements ArticleServiceInterface
             ]);
 
 
-            $this->sendNotificationToAdmin(
+            $this->notificationService->createNotificationForAdmin(
                 'Membuat artikel baru',
                 $user->email . 'Membuat artikel baru'
             );
@@ -109,12 +101,12 @@ class ArticleService implements ArticleServiceInterface
 
         if ($article) {
             $this->logRepository->createLog([
-                'id_user' => $this->userRepository->getUser()->id_user,
+                'id_user' => $user->id_user,
                 'activity' => 'Merbarui artikel',
                 'description' => $user->email .  'Merbarui artikel',
             ]);
 
-            $this->sendNotificationToAdmin(
+            $this->notificationService->createNotificationForAdmin(
                 'Merbarui artikel',
                 $user->email . ' Merbarui artikel'
             );

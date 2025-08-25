@@ -10,5 +10,7 @@ interface NotificationServiceInterface
 
     public function getNotificationById($id);
 
+    public function createNotificationForAdmin($title, $description);
+
     public function deleteNotifications(DeleteNotificationRequest $request);
 }

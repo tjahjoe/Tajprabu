@@ -30,7 +30,8 @@ class PosterRepository implements PosterRepositoryInterface
     public function updatePoster($id, $data)
     {
         $poster = PosterModel::findOrFail($id);
-        return $poster->update($data) ? true : false;
+        $poster->update($data);
+        return $poster;
     }
 
     public function getPathById($id)
@@ -42,7 +43,8 @@ class PosterRepository implements PosterRepositoryInterface
     public function deletePoster($id)
     {
         $poster = PosterModel::findOrFail($id);
-        return $poster->delete() ? true : false;
+        $poster->delete();
+        return $poster;
     }
 
     public function getTrashedPosters()
@@ -53,12 +55,14 @@ class PosterRepository implements PosterRepositoryInterface
     public function restorePoster($id)
     {
         $poster = PosterModel::withTrashed()->findOrFail($id);
-        return $poster->restore() ? true : false;
+        $poster->restore();
+        return $poster;
     }
 
     public function destroyPoster($id)
     {
         $poster = PosterModel::withTrashed()->findOrFail($id);
-        return $poster->forceDelete() ? true : false;
+        $poster->forceDelete();
+        return $poster;
     }
 }
