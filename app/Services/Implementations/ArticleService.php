@@ -58,6 +58,11 @@ class ArticleService implements ArticleServiceInterface
         return $this->articleRepository->getArticleByKode($kodeArticle);
     }
 
+    public function getArticleById($id)
+    {
+        return $this->articleRepository->getArticleById($id);
+    }
+
     public function createArticle(ArticleRequest $request)
     {
         $kodeArticle = Str::slug($request->title, '-');

@@ -16,6 +16,8 @@ interface ArticleServiceInterface
 
     public function getArticleByKode($kodeArticle);
 
+    public function getArticleById($id);
+
     public function createArticle(ArticleRequest $request);
 
     public function updateArticle($id, ArticleRequest $request);

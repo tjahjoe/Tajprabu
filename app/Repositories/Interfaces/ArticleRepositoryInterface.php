@@ -14,6 +14,8 @@ interface ArticleRepositoryInterface
 
     public function getArticleByKode($kodeArticle);
 
+    public function getArticleById($id);
+
     public function createArticle(array $data);
 
     public function updateArticle($id, array $data);

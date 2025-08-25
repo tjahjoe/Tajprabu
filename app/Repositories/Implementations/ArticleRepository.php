@@ -21,6 +21,11 @@ class ArticleRepository implements ArticleRepositoryInterface
         return $article;
     }
 
+    public function getArticleById($id)
+    {
+        return ArticleModel::find($id);
+    }
+
     public function getTrendingArticles()
     {
         return ArticleModel::orderBy('view', 'desc')->limit(5)->get();

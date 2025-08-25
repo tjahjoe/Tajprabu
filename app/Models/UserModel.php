@@ -54,11 +54,6 @@ class UserModel extends Authenticatable implements JWTSubject
         return $this->hasMany(LikeModel::class, 'id_user', 'id_user');
     }
 
-    public function view(): HasMany
-    {
-        return $this->hasMany(ViewModel::class, 'id_user', 'id_user');
-    }
-
     public function poster(): HasMany
     {
         return $this->hasMany(PosterModel::class, 'id_user', 'id_user');

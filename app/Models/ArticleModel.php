@@ -52,9 +52,4 @@ class ArticleModel extends Model
     {
         return $this->hasMany(CommentModel::class, 'id_article', 'id_article');
     }
-
-    public function view()
-    {
-        return $this->hasMany(ViewModel::class, 'id_article', 'id_article');
-    }
 }
