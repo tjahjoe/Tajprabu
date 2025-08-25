@@ -34,19 +34,21 @@ class UserRepository implements UserRepositoryInterface
 
     public function createUser($data)
     {
-        return UserModel::create($data) ? true : false;
+        return UserModel::create($data);
     }
 
     public function updateUser($id, $data)
     {
         $user = UserModel::findOrFail($id);
-        return $user->update($data) ? true : false;
+        $user->update($data);
+        return $user;
     }
 
     public function deleteUser($id)
     {
         $user = UserModel::findOrFail($id);
-        return $user->delete() ? true : false;
+        $user->delete();
+        return $user;
     }
 
     public function getTrashedUsers()
@@ -57,12 +59,14 @@ class UserRepository implements UserRepositoryInterface
     public function restoreUser($id)
     {
         $user = UserModel::withTrashed()->findOrFail($id);
-        return $user->restore() ? true : false;
+        $user->restore();
+        return $user;
     }
 
     public function destroyUser($id)
     {
         $user = UserModel::withTrashed()->findOrFail($id);
-        return $user->forceDelete() ? true : false;
+        $user->forceDelete();
+        return $user;
     }
 }

@@ -35,6 +35,7 @@ class UserRequest extends FormRequest
             'birth_date' => 'required|date',
             'gender' => 'required|string|in:man,woman',
             'highest_education' => 'required|string',
+            'image' => $isUpdate? 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' : 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 }
