@@ -24,5 +24,5 @@ interface PosterServiceInterface
 
     public function restorePoster($id);
     
-    public function destroyPoster($id, $path);
+    public function destroyPoster($id);
 }

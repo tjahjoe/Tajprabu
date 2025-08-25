@@ -24,7 +24,7 @@ class LikeRequest extends FormRequest
     {
         return [
             'id_article' => 'required|exists:article,id_article',
-            'id_user' => 'required|exists:user,id_user',
+            // 'id_user' => 'required|exists:user,id_user',
         ];
     }
 }

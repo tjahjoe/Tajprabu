@@ -25,13 +25,15 @@ class RoleRepository implements RoleRepositoryInterface
     public function updateRole($id, $data)
     {
         $role = RoleModel::findOrFail($id);
-        return $role->update($data) ? true : false;
+        $role->update($data);
+        return $role;
     }
 
     public function deleteRole($id)
     {
         $role = RoleModel::findOrFail($id);
-        return $role->delete() ? true : false;
+        $role->delete();
+        return $role;
     } 
 
     public function getTrashedRoles()
@@ -42,12 +44,14 @@ class RoleRepository implements RoleRepositoryInterface
     public function restoreRole($id)
     {
         $role = RoleModel::onlyTrashed()->findOrFail($id);
-        return $role->restore() ? true : false;
+        $role->restore();
+        return $role;
     }
 
     public function destroyRole($id)
     {
         $role = RoleModel::withTrashed()->findOrFail($id);
-        return $role->forceDelete() ? true : false;
+        $role->forceDelete();
+        return $role;
     }
 }   

@@ -64,9 +64,9 @@ class PosterController extends Controller
         return response()->json($poster);
     }
 
-    public function destroyPoster($id, $path)
+    public function destroyPoster($id,)
     {
-        $poster = $this->posterService->destroyPoster($id, $path);
+        $poster = $this->posterService->destroyPoster($id);
         return response()->json($poster);
     }
 }

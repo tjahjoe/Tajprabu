@@ -3,17 +3,36 @@
 namespace App\Services\Implementations;
 
 use App\Http\Requests\RoleRequest;
+
+use App\Services\Implementations\NotificationService;
+
 use App\Repositories\Interfaces\RoleRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
 use App\Repositories\Interfaces\NotificationRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\RoleServiceInterface;
 
-class RoleService implements RoleServiceInterface{
-    protected $roleRepository;
+class RoleService implements RoleServiceInterface
+{
 
-    public function __construct(RoleRepositoryInterface $roleRepository)
-    {
+    protected $notificationService;
+    protected $userRepository;
+    protected $roleRepository;
+    protected $logRepository;
+    protected $notificationRepository;
+
+    public function __construct(
+        NotificationService $notificationService,
+        UserRepositoryInterface $userRepository,
+        RoleRepositoryInterface $roleRepository,
+        LogRepositoryInterface $logRepository,
+        NotificationRepositoryInterface $notificationRepository
+    ) {
+        $this->notificationService = $notificationService;
+        $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
+        $this->logRepository = $logRepository;
+        $this->notificationRepository = $notificationRepository;
     }
     public function getAllRoles()
     {
@@ -27,22 +46,65 @@ class RoleService implements RoleServiceInterface{
 
     public function createRole(RoleRequest $request)
     {
-        return $this->roleRepository->createRole([
+        $user = $this->userRepository->getUser();
+        $role = $this->roleRepository->createRole([
             'kode' => $request->kode,
             'role' => $request->role,
         ]);
+
+        if ($role) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Membuat role baru',
+                'description' => $user->email . ' Membuat role baru',
+            ]);
+            $this->notificationService->createNotificationForAdmin(
+                'Membuat role baru',
+                $user->email . 'Membuat role baru'
+            );
+        }
+        return $role;
     }
 
     public function updateRole($id, RoleRequest $request)
     {
-        return $this->roleRepository->updateRole($id, [
+        $user = $this->userRepository->getUser();
+        $role = $this->roleRepository->updateRole($id, [
             'kode' => $request->kode,
             'role' => $request->role,
         ]);
+
+        if ($role) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Merbarui role',
+                'description' => $user->email . ' Merbarui role',
+            ]);
+            $this->notificationService->createNotificationForAdmin(
+                'Merbarui role',
+                $user->email . ' Merbarui role'
+            );
+        }
+        return $role;
     }
+
     public function deleteRole($id)
     {
-        return $this->roleRepository->deleteRole($id);
+        $user = $this->userRepository->getUser();
+        $role = $this->roleRepository->deleteRole($id);
+
+        if ($role) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus role',
+                'description' => $user->email . ' Menghapus role',
+            ]);
+            $this->notificationService->createNotificationForAdmin(
+                'Membuat role baru',
+                $user->email . 'Membuat role baru'
+            );
+        }
+        return $role;
     }
 
     public function getTrashedRoles()
@@ -50,14 +112,41 @@ class RoleService implements RoleServiceInterface{
         return $this->roleRepository->getTrashedRoles();
     }
 
+
     public function restoreRole($id)
     {
-        return $this->roleRepository->restoreRole($id);
+        $user = $this->userRepository->getUser();
+        $role = $this->roleRepository->restoreRole($id);
+        if ($role) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Mengembalikan role',
+                'description' => $user->email . ' Mengembalikan role',
+            ]);
+            $this->notificationService->createNotificationForAdmin(
+                'Membuat role baru',
+                $user->email . 'Membuat role baru'
+            );
+        }
+        return $role;
     }
 
     public function destroyRole($id)
     {
-        return $this->roleRepository->destroyRole($id);
+        $user = $this->userRepository->getUser();
+        $role = $this->roleRepository->destroyRole($id);
+        if ($role) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus permanen role',
+                'description' => $user->email . ' Menghapus permanen role',
+            ]);
+            $this->notificationService->createNotificationForAdmin(
+                'Membuat role baru',
+                $user->email . 'Membuat role baru'
+            );
+        }
+        return $role;
     }
 }
 

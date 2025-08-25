@@ -91,3 +91,7 @@ Route::delete('/articles/{id}/destroy', [ArticleController::class, 'destroyArtic
 
 Route::post('/posters/create', [PosterController::class, 'createPoster']);
 Route::post('/posters/{id}/update', [PosterController::class, 'updatePoster']);
+Route::delete('/posters/{id}/delete', [PosterController::class, 'deletePoster']);
+Route::get('/posters/show/trashed', [PosterController::class, 'getTrashedPosters']);
+Route::post('/posters/{id}/restore', [PosterController::class, 'restorePoster']);
+Route::delete('/posters/{id}/destroy', [PosterController::class, 'destroyPoster']);

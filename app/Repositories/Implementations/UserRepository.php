@@ -20,7 +20,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function getUserByRole($role)
     {
-        return UserModel::with('role')->where('role.role', $role)->get();
+        return UserModel::with('role')
+            ->whereHas('role', function ($query) use ($role) {
+                $query->where('role', $role);
+            })
+            ->get();
     }
 
     public function getUserById($id)
@@ -43,7 +47,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = UserModel::findOrFail($id);
         return $user->delete() ? true : false;
-    } 
+    }
 
     public function getTrashedUsers()
     {

@@ -24,7 +24,7 @@ class ArticleRequest extends FormRequest
     {
         $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
         return [
-            'id_user' => 'required|exists:user,id_user',
+            // 'id_user' => 'required|exists:user,id_user',
             'title' => 'required|string|max:100|unique:article,title',
             'article' => 'required|string',
             'status' => $isUpdate ? 'required|in:approved,rejected' : 'nullable|in:pending,approved,rejected',

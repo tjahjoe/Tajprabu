@@ -63,16 +63,21 @@ class PosterService implements PosterServiceInterface
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
+                // 'id_user' => 1,
                 'activity' => 'Membuat poster baru',
                 'description' => $user->email . ' Membuat poster baru',
+                // 'description' => ' Membuat poster baru',
             ]);
 
 
             $this->notificationService->createNotificationForAdmin(
                 'Membuat poster baru',
                 $user->email . 'Membuat poster baru'
+                // 'Membuat poster baru'
             );
         }
+
+        return $poster;
     }
 
     public function updatePoster($id, PosterRequest $request)
@@ -102,15 +107,20 @@ class PosterService implements PosterServiceInterface
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
+                // 'id_user' => 1,
                 'activity' => 'Merbarui artikel',
-                'description' => $user->email .  'Merbarui artikel',
+                // 'description' => 'Merbarui artikel',
+                'description' => $user->email .  ' Merbarui artikel',
             ]);
 
             $this->notificationService->createNotificationForAdmin(
                 'Merbarui artikel',
                 $user->email . ' Merbarui artikel'
+                // 'Merbarui artikel'
             );
         }
+
+        return $poster;
     }
 
     public function updateStatusPoster($id, PosterRequest $request)
@@ -133,6 +143,8 @@ class PosterService implements PosterServiceInterface
                 'description' => $user->email . ' Merbarui status poster',
             ]);
         }
+
+        return $poster;
     }
 
     public function deletePoster($id)
@@ -143,12 +155,15 @@ class PosterService implements PosterServiceInterface
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
+                // 'id_user' => 1,
                 'activity' => 'Menghapus poster',
                 'description' => $user->email . ' Menghapus poster',
+                // 'description' => 'Menghapus poster',
             ]);
             $this->notificationRepository->createNotification([
                 'id_user' => $poster->id_user,
                 'title' => 'Menghapus poster',
+                // 'description' => 'Menghapus poster',
                 'description' => $user->email . ' Menghapus poster',
             ]);
         }
@@ -168,37 +183,43 @@ class PosterService implements PosterServiceInterface
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
+                // 'id_user' => 1,
                 'activity' => 'Mengembalikan poster',
                 'description' => $user->email . ' Mengembalikan poster',
+                // 'description' => 'Mengembalikan poster',
             ]);
             $this->notificationRepository->createNotification([
                 'id_user' => $poster->id_user,
                 'title' => 'Mengembalikan poster',
                 'description' => $user->email . ' Mengembalikan poster',
+                // 'description' => 'Mengembalikan poster',
             ]);
         }
         return $poster;
     }
 
-    public function destroyPoster($id, $path)
+    public function destroyPoster($id)
     {
-        if ($path) {
-            Storage::disk('s3')->delete($path);
-        }
 
         $user = $this->userRepository->getUser();
         $poster = $this->posterRepository->destroyPoster($id);
 
         if ($poster) {
+
+            Storage::disk('s3')->delete($poster->path);
+
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
+                // 'id_user' => 1,
                 'activity' => 'Menghapus permanen poster',
                 'description' => $user->email . ' Menghapus permanen poster',
+                // 'description' => 'Menghapus permanen poster',
             ]);
             $this->notificationRepository->createNotification([
                 'id_user' => $poster->id_user,
                 'title' => 'Menghapus permanen poster',
                 'description' => $user->email . ' Menghapus permanen poster',
+                // 'description' => 'Menghapus permanen poster',
             ]);
         }
         return $poster;
