@@ -6,7 +6,11 @@ interface UserRepositoryInterface
 {
     public function getAllUsers();
 
+    public function getUser();
+
     public function getUserById($id);
+
+    public function getUserByRole($role);
 
     public function createUser(array $data);
 

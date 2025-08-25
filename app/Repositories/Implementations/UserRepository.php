@@ -4,12 +4,23 @@ namespace App\Repositories\Implementations;
 
 use App\Models\UserModel;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class UserRepository implements UserRepositoryInterface
 {
     public function getAllUsers()
     {
         return UserModel::get();
+    }
+
+    public function getUser()
+    {
+        return Auth::user();
+    }
+
+    public function getUserByRole($role)
+    {
+        return UserModel::with('role')->where('role.role', $role)->get();
     }
 
     public function getUserById($id)

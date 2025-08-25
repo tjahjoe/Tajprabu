@@ -6,6 +6,7 @@ use App\Http\Requests\ArticleRequest;
 use App\Repositories\Interfaces\ArticleRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
 use App\Repositories\Interfaces\NotificationRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\ArticleServiceInterface;
 use Str;
 
@@ -13,9 +14,19 @@ class ArticleService implements ArticleServiceInterface
 {
 
     protected $articleRepository;
-    public function __construct(ArticleRepositoryInterface $articleRepository)
-    {
+    protected $logRepository;
+    protected $notificationRepository;
+    protected $userRepository;
+    public function __construct(
+        ArticleRepositoryInterface $articleRepository,
+        LogRepositoryInterface $logRepository,
+        NotificationRepositoryInterface $notificationRepository,
+        UserRepositoryInterface $userRepository
+    ) {
         $this->articleRepository = $articleRepository;
+        $this->logRepository = $logRepository;
+        $this->notificationRepository = $notificationRepository;
+        $this->userRepository = $userRepository;
     }
     public function getAllArticles()
     {
@@ -42,32 +53,115 @@ class ArticleService implements ArticleServiceInterface
         return $this->articleRepository->getArticleByKode($kodeArticle);
     }
 
+    public function sendNotificationToAdmin($title, $description)
+    {
+        $admins = $this->userRepository->getUserByRole('Admin');
+
+        foreach ($admins as $admin) {
+            $this->notificationRepository->createNotification([
+                'id_user' => $admin->id_user,
+                'title' => $title,
+                'description' => $description,
+            ]);
+        }
+    }
+
     public function createArticle(ArticleRequest $request)
     {
         $kodeArticle = Str::slug($request->title, '-');
-        return $this->articleRepository->createArticle([
-            'id_user' => $request->id_user,
-            'kode_article' => $kodeArticle,    
+        $user = $this->userRepository->getUser();
+
+        $article = $this->articleRepository->createArticle([
+            'id_user' => $user->id_user,
+            'kode_article' => $kodeArticle,
             'title' => $request->title,
             'article' => $request->article,
         ]);
+
+        if ($article) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Membuat artikel baru',
+                'description' => $user->email . ' Membuat artikel baru',
+            ]);
+
+
+            $this->sendNotificationToAdmin(
+                'Membuat artikel baru',
+                $user->email . 'Membuat artikel baru'
+            );
+        }
+        return $article;
+
     }
 
     public function updateArticle($id, ArticleRequest $request)
     {
         $kodeArticle = Str::slug($request->title, '-');
-        return $this->articleRepository->updateArticle($id, [
-            'id_user' => $request->id_user,
+        $user = $this->userRepository->getUser();
+
+        $article = $this->articleRepository->updateArticle($id, [
+            'id_user' => $user->id_user,
             'kode_article' => $kodeArticle,
             'title' => $request->title,
             'article' => $request->article,
+        ]);
+
+        if ($article) {
+            $this->logRepository->createLog([
+                'id_user' => $this->userRepository->getUser()->id_user,
+                'activity' => 'Merbarui artikel',
+                'description' => $user->email .  'Merbarui artikel',
+            ]);
+
+            $this->sendNotificationToAdmin(
+                'Merbarui artikel',
+                $user->email . ' Merbarui artikel'
+            );
+        }
+        return $article;
+    }
+
+    public function updateStatusArticle($id, ArticleRequest $request)
+    {
+        $user = $this->userRepository->getUser();
+        $article = $this->articleRepository->updateArticle($id, [
             'status' => $request->status,
         ]);
+
+        if ($article) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Merbarui status artikel',
+                'description' => $user->email . ' Merbarui status artikel',
+            ]);
+
+            $this->notificationRepository->createNotification([
+                'id_user' => $article->id_user,
+                'title' => 'Merbarui status artikel',
+                'description' => $user->email . ' Merbarui status artikel',
+            ]);
+        }
     }
 
     public function deleteArticle($id)
     {
-        return $this->articleRepository->deleteArticle($id);
+        $user = $this->userRepository->getUser();
+        $article = $this->articleRepository->deleteArticle($id);
+
+        if ($article) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus artikel',
+                'description' => $user->email . ' Menghapus artikel',
+            ]);
+            $this->notificationRepository->createNotification([
+                'id_user' => $article->id_user,
+                'title' => 'Menghapus artikel',
+                'description' => $user->email . ' Menghapus artikel',
+            ]);
+        }
+        return $article;
     }
 
     public function getTrashedArticles()
@@ -77,82 +171,40 @@ class ArticleService implements ArticleServiceInterface
 
     public function restoreArticle($id)
     {
-        return $this->articleRepository->restoreArticle($id);
+        $user = $this->userRepository->getUser();
+        $article = $this->articleRepository->restoreArticle($id);
+        if ($article) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Mengembalikan artikel',
+                'description' => $user->email . ' Mengembalikan artikel',
+            ]);
+            $this->notificationRepository->createNotification([
+                'id_user' => $article->id_user,
+                'title' => 'Mengembalikan artikel',
+                'description' => $user->email . ' Mengembalikan artikel',
+            ]);
+        }
+        return $article;
     }
 
     public function destroyArticle($id)
     {
-        return $this->articleRepository->destroyArticle($id);
+        $user = $this->userRepository->getUser();
+        $article = $this->articleRepository->destroyArticle($id);
+        if ($article) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus permanen artikel',
+                'description' => $user->email . ' Menghapus permanen artikel',
+            ]);
+            $this->notificationRepository->createNotification([
+                'id_user' => $article->id_user,
+                'title' => 'Menghapus permanen artikel',
+                'description' => $user->email . ' Menghapus permanen artikel',
+            ]);
+        }
+        return $article;
     }
-    
-    // protected $userRepository;
-
-    // public function __construct(UserRepositoryInterface $userRepository)
-    // {
-    //     $this->userRepository = $userRepository;
-    // }
-    // public function getAllUsers()
-    // {
-    //     return $this->userRepository->getAllUsers();
-    // }
-
-    // public function getUserById($id)
-    // {
-    //     return $this->userRepository->getUserById($id);
-    // }
-
-    // public function createUser(UserRequest $request)
-    // {
-    //     return $this->userRepository->createUser([
-    //         'role_id' => $request->role_id,
-    //         'email' => $request->email,
-    //         'password' => $request->password,
-    //         'name' => $request->name,
-    //         'address' => $request->address,
-    //         'phone_number' => $request->phone_number,
-    //         'birth_date' => $request->birth_date,
-    //         'gender' => $request->gender,
-    //         'highest_education' => $request->highest_education
-    //     ]);
-    // }
-
-    // public function updateUser($id, UserRequest $request)
-    // {
-    //     $data = $request->only([
-    //         'role_id',
-    //         'email',
-    //         'name',
-    //         'address',
-    //         'phone_number',
-    //         'birth_date',
-    //         'gender',
-    //         'highest_education',
-    //     ]);
-
-    //     if ($request->filled('password')) {
-    //         $data['password'] = $request->password;
-    //     }
-
-    //     return $this->userRepository->updateUser($id, $data);
-    // }
-    // public function deleteUser($id)
-    // {
-    //     return $this->userRepository->deleteUser($id);
-    // }
-
-    // public function getTrashedUsers()
-    // {
-    //     return $this->userRepository->getTrashedUsers();
-    // }
-
-    // public function restoreUser($id)
-    // {
-    //     return $this->userRepository->restoreUser($id);
-    // }
-
-    // public function destroyUser($id)
-    // {
-    //     return $this->userRepository->destroyUser($id);
-    // }
 }
 
