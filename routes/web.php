@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('cloud');
+    return view('app');
 });
 
 // Route::get('/article', [ArticleController::class, 'getAllArticle']);
@@ -27,7 +27,7 @@ Route::get('/', function () {
 // Route::get('oauth/{provider}', [OauthController::class, 'redirectToProvider']);
 // Route::get('oauth/{provider}/callback', [OauthController::class, 'handleProviderCallback']);
 
-// Route::get('/sendAll', [PusherController::class, 'publishToInterests']);
+Route::get('/sendAll', [PusherController::class, 'publishToInterests']);
 // Route::get('/sendUser', [PusherController::class, 'sendNotificationToUser']);
 
 // Route::middleware(['authorize:SPR'])->group(function () {

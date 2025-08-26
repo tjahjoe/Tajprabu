@@ -4,7 +4,7 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\RoleRequest;
 
-use App\Services\Implementations\NotificationService;
+use App\Services\Interfaces\NotificationServiceInterface;
 
 use App\Repositories\Interfaces\RoleRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
@@ -22,7 +22,7 @@ class RoleService implements RoleServiceInterface
     protected $notificationRepository;
 
     public function __construct(
-        NotificationService $notificationService,
+        NotificationServiceInterface $notificationService,
         UserRepositoryInterface $userRepository,
         RoleRepositoryInterface $roleRepository,
         LogRepositoryInterface $logRepository,

@@ -4,7 +4,7 @@ namespace App\Services\Implementations;
 
 use App\Http\Requests\ArticleRequest;
 
-use App\Services\Implementations\NotificationService;
+use App\Services\Interfaces\NotificationServiceInterface;
 
 use App\Repositories\Interfaces\ArticleRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
@@ -21,7 +21,7 @@ class ArticleService implements ArticleServiceInterface
     protected $notificationRepository;
     protected $userRepository;
     public function __construct(
-        NotificationService $notificationService,
+        NotificationServiceInterface $notificationService,
         ArticleRepositoryInterface $articleRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,

@@ -2,7 +2,7 @@
 
 namespace App\Services\Implementations;
 
-use App\Services\Implementations\NotificationService;
+use App\Services\Interfaces\NotificationServiceInterface;
 
 use App\Http\Requests\TagRequest;
 use App\Repositories\Interfaces\TagRepositoryInterface;
@@ -20,7 +20,7 @@ class TagService implements TagServiceInterface{
     protected $userRepository;
 
     public function __construct(
-        NotificationService $notificationService,
+        NotificationServiceInterface $notificationService,
         TagRepositoryInterface $tagRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,

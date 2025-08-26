@@ -2,7 +2,7 @@
 
 namespace App\Services\Implementations;
 
-use App\Services\Implementations\NotificationService;
+use App\Services\Interfaces\NotificationServiceInterface;
 
 use App\Http\Requests\TopicRequest;
 use App\Repositories\Interfaces\TopicRepositoryInterface;
@@ -21,7 +21,7 @@ class TopicService implements TopicServiceInterface
     protected $userRepository;
 
     public function __construct(
-        NotificationService $notificationService,
+        NotificationServiceInterface $notificationService,
         TopicRepositoryInterface $topicRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,

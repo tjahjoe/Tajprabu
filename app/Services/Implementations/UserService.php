@@ -2,7 +2,7 @@
 
 namespace App\Services\Implementations;
 
-use App\Services\Implementations\NotificationService;
+use App\Services\Interfaces\NotificationServiceInterface;
 
 use App\Http\Requests\UserRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -19,11 +19,15 @@ class UserService implements UserServiceInterface
     protected $notificationRepository;
 
     public function __construct(
+        NotificationServiceInterface $notificationService,
         UserRepositoryInterface $userRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository)
     {
+        $this->notificationService = $notificationService;
         $this->userRepository = $userRepository;
+        $this->logRepository = $logRepository;
+        $this->notificationRepository = $notificationRepository;
     }
     public function getAllUsers()
     {

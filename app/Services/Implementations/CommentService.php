@@ -22,12 +22,14 @@ class CommentService implements CommentServiceInterface
         CommentRepositoryInterface $commentRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        ArticleRepositoryInterface $articleRepository
     ) {
         $this->commentRepository = $commentRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;
         $this->userRepository = $userRepository;
+        $this->articleRepository = $articleRepository;
     }
 
     public function getCommentByArticle($id_article)

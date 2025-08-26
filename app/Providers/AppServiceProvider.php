@@ -15,6 +15,7 @@ use App\Services\Interfaces\LikeServiceInterface;
 use App\Services\Interfaces\CommentServiceInterface;
 use App\Services\Interfaces\NotificationServiceInterface;
 use App\Services\Interfaces\LogServiceInterface;
+use App\Services\Interfaces\PusherServiceInterface;
 
 use App\Services\Implementations\PosterService;
 use App\Services\Implementations\TagService;
@@ -27,6 +28,7 @@ use App\Services\Implementations\LikeService;
 use App\Services\Implementations\CommentService;
 use App\Services\Implementations\NotificationService;
 use App\Services\Implementations\LogService;
+use App\Services\Implementations\PusherService;
 
 use App\Repositories\Interfaces\PosterRepositoryInterface;
 use App\Repositories\Interfaces\TagRepositoryInterface;
@@ -70,6 +72,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CommentServiceInterface::class, CommentService::class);
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
         $this->app->bind(LogServiceInterface::class, LogService::class);
+        $this->app->bind(PusherServiceInterface::class, PusherService::class);
 
 
         $this->app->bind(PosterRepositoryInterface::class, PosterRepository::class);
