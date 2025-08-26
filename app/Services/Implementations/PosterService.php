@@ -11,7 +11,6 @@ use App\Repositories\Interfaces\LogRepositoryInterface;
 use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Services\Interfaces\PosterServiceInterface;
-use App\Services\Interfaces\PusherServiceInterface;
 use Storage;
 
 class PosterService implements PosterServiceInterface
@@ -21,7 +20,6 @@ class PosterService implements PosterServiceInterface
     protected $logRepository;
     protected $notificationRepository;
     protected $userRepository;
-    protected $pusherService;
 
     public function __construct(
         NotificationServiceInterface $notificationService,
@@ -29,14 +27,12 @@ class PosterService implements PosterServiceInterface
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,
         UserRepositoryInterface $userRepository,
-        PusherServiceInterface $pusherService
     ) {
         $this->notificationService = $notificationService;
         $this->posterRepository = $posterRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;
         $this->userRepository = $userRepository;
-        $this->pusherService = $pusherService;
     }
     public function getAllPosters()
     {
@@ -57,7 +53,7 @@ class PosterService implements PosterServiceInterface
         $file = $request->file('poster');
         $path = Storage::disk('s3')->put('posters', $file);
 
-        // $user = $this->userRepository->getUser();
+        $user = $this->userRepository->getUser();
 
         $poster = $this->posterRepository->createPoster([
             'id_user' => $request->id_user, //$user->id_user
@@ -66,23 +62,21 @@ class PosterService implements PosterServiceInterface
 
         if ($poster) {
             $this->logRepository->createLog([
-                // 'id_user' => $user->id_user,
-                'id_user' => 1,
+                'id_user' => $user->id_user,
+                // 'id_user' => 1,
                 'activity' => 'Membuat poster baru',
-                // 'description' => $user->email . ' Membuat poster baru',
-                'description' => ' Membuat poster baru',
+                'description' => $user->email . ' Membuat poster baru',
+                // 'description' => ' Membuat poster baru',
             ]);
 
 
             $this->notificationService->createNotificationForRole(
                 'Super Admin',
                 'Membuat poster baru',
-                // $user->email . 'Membuat poster baru'
-                'Membuat poster baru'
+                $user->email . 'Membuat poster baru'
+                // 'Membuat poster baru'
             );
         }
-
-        $this->pusherService->sendPusher();
 
         return $poster;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Services\Implementations;
 
+use App\Services\Interfaces\PusherServiceInterface;
+
 use App\Http\Requests\DeleteNotificationRequest;
 use App\Repositories\Interfaces\NotificationRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -11,13 +13,16 @@ class NotificationService implements NotificationServiceInterface
 {
     protected $notificationRepository;
     protected $userRepository;
+    protected $pusherService;
 
     public function __construct(
         NotificationRepositoryInterface $notificationRepository,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        PusherServiceInterface $pusherService
     ) {
         $this->notificationRepository = $notificationRepository;
         $this->userRepository = $userRepository;
+        $this->pusherService = $pusherService;
     }
 
     public function getAllNotificationsByUser($idUser)
@@ -34,13 +39,19 @@ class NotificationService implements NotificationServiceInterface
     {
         $admins = $this->userRepository->getUserByRole($role);
 
+        $emails = [];
+
         foreach ($admins as $admin) {
             $this->notificationRepository->createNotification([
                 'id_user' => $admin->id_user,
                 'title' => $title,
                 'description' => $description,
             ]);
+
+            $emails[] = $admin->email;
         }
+
+        $this->pusherService->sendPusher($emails, $title, $description);
     }
 
     public function deleteNotifications(DeleteNotificationRequest $request)

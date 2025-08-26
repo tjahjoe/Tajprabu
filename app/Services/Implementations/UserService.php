@@ -3,6 +3,7 @@
 namespace App\Services\Implementations;
 
 use App\Services\Interfaces\NotificationServiceInterface;
+use App\Services\Interfaces\PusherServiceInterface;
 
 use App\Http\Requests\UserRequest;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -14,17 +15,20 @@ use Storage;
 class UserService implements UserServiceInterface
 {
     protected $notificationService;
+    protected $pusherService;
     protected $userRepository;
     protected $logRepository;
     protected $notificationRepository;
 
     public function __construct(
         NotificationServiceInterface $notificationService,
+        PusherServiceInterface $pusherService,
         UserRepositoryInterface $userRepository,
         LogRepositoryInterface $logRepository,
-        NotificationRepositoryInterface $notificationRepository)
-    {
+        NotificationRepositoryInterface $notificationRepository
+    ) {
         $this->notificationService = $notificationService;
+        $this->pusherService = $pusherService;
         $this->userRepository = $userRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;
@@ -37,7 +41,12 @@ class UserService implements UserServiceInterface
     public function getUserById($id)
     {
         return $this->userRepository->getUserById($id);
-    }       
+    }
+
+    public function getUserByEmail($email)
+    {
+        return $this->userRepository->getUserByEmail($email);
+    }
 
     public function createUser(UserRequest $request)
     {
@@ -45,7 +54,7 @@ class UserService implements UserServiceInterface
         $path = Storage::disk('s3')->put('profiles', $file);
 
         $user = $this->userRepository->createUser([
-            'role_id' => $request->role_id,
+            'id_role' => $request->id_role,
             'email' => $request->email,
             'password' => $request->password,
             'name' => $request->name,
@@ -121,6 +130,12 @@ class UserService implements UserServiceInterface
                 'title' => 'Meperbarui pengguna',
                 'description' => $user->email . ' Meperbarui pengguna',
             ]);
+
+            $this->pusherService->sendPusher(
+                [$userUpdated->email],
+                'Meperbarui pengguna',
+                $user->email . ' Meperbarui pengguna',
+            );
         }
 
         return $userUpdated;
@@ -148,6 +163,12 @@ class UserService implements UserServiceInterface
                 'Menghapus pengguna',
                 $user->email . ' Menghapus pengguna'
             );
+
+            $this->pusherService->sendPusher(
+                [$userDeleted->email],
+                'Menghapus pengguna',
+                $user->email . ' Menghapus pengguna'
+            );
         }
     }
 
@@ -160,7 +181,7 @@ class UserService implements UserServiceInterface
     {
         $user = $this->userRepository->getUser();
         $userRestored = $this->userRepository->restoreUser($id);
-        
+
         if ($userRestored) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
@@ -176,6 +197,12 @@ class UserService implements UserServiceInterface
 
             $this->notificationService->createNotificationForRole(
                 'Super Admin',
+                'Mengembalikan pengguna',
+                $user->email . ' Mengembalikan pengguna'
+            );
+
+            $this->pusherService->sendPusher(
+                [$userRestored->email],
                 'Mengembalikan pengguna',
                 $user->email . ' Mengembalikan pengguna'
             );

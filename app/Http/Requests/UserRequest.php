@@ -31,7 +31,7 @@ class UserRequest extends FormRequest
             'password' => $isUpdate ? 'nullable|string|min:5|max:20' : 'required|string|min:5|max:20',
             'name' => 'required|string|max:100',
             'address' => 'required|string',
-            'phone_number' => $isUpdate ? 'required|integer|max:30' : 'required|string|max:30|unique:user,phone_number',
+            'phone_number' => $isUpdate ? 'required|regex:/^[0-9]+$/|max:30' : 'required|regex:/^[0-9]+$/|max:30|unique:user,phone_number',
             'birth_date' => 'required|date',
             'gender' => 'required|string|in:man,woman',
             'highest_education' => 'required|string',

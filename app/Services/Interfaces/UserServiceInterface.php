@@ -10,6 +10,8 @@ interface UserServiceInterface
 
     public function getUserById($id);
 
+    public function getUserByEmail($email);
+
     public function createUser(UserRequest $request);
 
     public function updateUser($id, UserRequest $request);
