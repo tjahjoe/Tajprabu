@@ -2,6 +2,8 @@
 
 namespace App\Services\Implementations;
 
+use App\Services\Interfaces\PusherServiceInterface;
+
 use App\Http\Requests\CommentRequest;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
@@ -12,6 +14,7 @@ use App\Services\Interfaces\CommentServiceInterface;
 
 class CommentService implements CommentServiceInterface
 {
+    protected $pusherService;
     protected $commentRepository;
     protected $logRepository;
     protected $notificationRepository;
@@ -19,12 +22,14 @@ class CommentService implements CommentServiceInterface
     protected $articleRepository;
 
     public function __construct(
+        PusherServiceInterface $pusherService,
         CommentRepositoryInterface $commentRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,
         UserRepositoryInterface $userRepository,
         ArticleRepositoryInterface $articleRepository
     ) {
+        $this->pusherService = $pusherService;
         $this->commentRepository = $commentRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;

@@ -20,7 +20,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function getUser()
     {
-        return Auth::user();
+        return Auth::user()->load('role');
     }
 
     public function getUserByRole($role)

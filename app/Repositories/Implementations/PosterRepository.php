@@ -29,7 +29,7 @@ class PosterRepository implements PosterRepositoryInterface
 
     public function updatePoster($id, $data)
     {
-        $poster = PosterModel::findOrFail($id);
+        $poster = PosterModel::with('user')->findOrFail($id);
         $poster->update($data);
         return $poster;
     }
@@ -42,7 +42,7 @@ class PosterRepository implements PosterRepositoryInterface
 
     public function deletePoster($id)
     {
-        $poster = PosterModel::findOrFail($id);
+        $poster = PosterModel::with('user')->findOrFail($id);
         $poster->delete();
         return $poster;
     }
@@ -54,14 +54,14 @@ class PosterRepository implements PosterRepositoryInterface
 
     public function restorePoster($id)
     {
-        $poster = PosterModel::withTrashed()->findOrFail($id);
+        $poster = PosterModel::withTrashed()->with('user')->findOrFail($id);
         $poster->restore();
         return $poster;
     }
 
     public function destroyPoster($id)
     {
-        $poster = PosterModel::withTrashed()->findOrFail($id);
+        $poster = PosterModel::withTrashed()->with('user')->findOrFail($id);
         $poster->forceDelete();
         return $poster;
     }

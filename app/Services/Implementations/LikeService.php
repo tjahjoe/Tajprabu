@@ -2,6 +2,8 @@
 
 namespace App\Services\Implementations;
 
+use App\Services\Interfaces\PusherServiceInterface;
+
 use App\Http\Requests\LikeRequest;
 use App\Repositories\Interfaces\LikeRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
@@ -12,6 +14,7 @@ use App\Services\Interfaces\LikeServiceInterface;
 
 class LikeService implements LikeServiceInterface
 {
+    protected $pusherService;
     protected $likeRepository;
     protected $logRepository;
     protected $userRepository;
@@ -19,12 +22,14 @@ class LikeService implements LikeServiceInterface
     protected $articleRepository;
 
     public function __construct(
+        PusherServiceInterface $pusherService,
         LikeRepositoryInterface $likeRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,
         UserRepositoryInterface $userRepository,
         ArticleRepositoryInterface $articleRepository
     ) {
+        $this->pusherService = $pusherService;
         $this->likeRepository = $likeRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;
@@ -61,6 +66,11 @@ class LikeService implements LikeServiceInterface
                 'title' => 'Menyukai artikel',
                 'description' => $user->email . ' Menyukai artikel',
             ]);
+            $this->pusherService->sendPusher(
+                [$artikel->id_user],
+                'Menyukai artikel',
+                $user->email . ' Menyukai artikel'
+            );
         }
     }
 

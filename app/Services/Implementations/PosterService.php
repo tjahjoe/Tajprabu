@@ -5,6 +5,7 @@ namespace App\Services\Implementations;
 use App\Http\Requests\PosterRequest;
 
 use App\Services\Interfaces\NotificationServiceInterface;
+use App\Services\Interfaces\PusherServiceInterface;
 
 use App\Repositories\Interfaces\PosterRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
@@ -16,6 +17,7 @@ use Storage;
 class PosterService implements PosterServiceInterface
 {
     protected $notificationService;
+    protected $pusherService;
     protected $posterRepository;
     protected $logRepository;
     protected $notificationRepository;
@@ -23,12 +25,14 @@ class PosterService implements PosterServiceInterface
 
     public function __construct(
         NotificationServiceInterface $notificationService,
+        PusherServiceInterface $pusherService,
         PosterRepositoryInterface $posterRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,
         UserRepositoryInterface $userRepository,
     ) {
         $this->notificationService = $notificationService;
+        $this->pusherService = $pusherService;
         $this->posterRepository = $posterRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;
@@ -56,17 +60,15 @@ class PosterService implements PosterServiceInterface
         $user = $this->userRepository->getUser();
 
         $poster = $this->posterRepository->createPoster([
-            'id_user' => $request->id_user, //$user->id_user
+            'id_user' => $user->id_user, 
             'path' => $path,
         ]);
 
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
-                // 'id_user' => 1,
                 'activity' => 'Membuat poster baru',
                 'description' => $user->email . ' Membuat poster baru',
-                // 'description' => ' Membuat poster baru',
             ]);
 
 
@@ -74,7 +76,6 @@ class PosterService implements PosterServiceInterface
                 'Super Admin',
                 'Membuat poster baru',
                 $user->email . 'Membuat poster baru'
-                // 'Membuat poster baru'
             );
         }
 
@@ -84,8 +85,57 @@ class PosterService implements PosterServiceInterface
     public function updatePoster($id, PosterRequest $request)
     {
         $user = $this->userRepository->getUser();
+
+        if ($user->role->role == 'Super Admin') {
+            $this->updatePosterSuperAdmin($id, $user, $request);
+        } else if ($user->role->role == 'Admin') {
+            $this->updatePosterAdmin($id, $user, $request);
+        }
+        // $data = [
+        //     'id_user' => $request->id_user, //$user->id_user
+        //     'status' => $request->status,
+        // ];
+
+        // $path = $this->posterRepository->getPosterById($id)->path;
+
+        // if ($request->hasFile('poster')) {
+
+        //     if ($path) {
+        //         Storage::disk('s3')->delete($path);
+        //     }
+
+        //     $file = $request->file('poster');
+        //     $newPath = Storage::disk('s3')->put('posters', $file);
+
+        //     $data['path'] = $newPath;
+        // }
+
+        // $poster = $this->posterRepository->updatePoster($id, $data);
+
+        // if ($poster) {
+        //     $this->logRepository->createLog([
+        //         'id_user' => $user->id_user,
+        //         // 'id_user' => 1,
+        //         'activity' => 'Merbarui poster',
+        //         // 'description' => 'Merbarui artikel',
+        //         'description' => $user->email .  ' Merbarui poster',
+        //     ]);
+
+        //     $this->notificationService->createNotificationForRole(
+        //         'Super Admin',
+        //         'Merbarui poster',
+        //         $user->email . ' Merbarui poster'
+        //         // 'Merbarui artikel'
+        //     );
+        // }
+
+        // return $poster;
+    }
+
+    public function updatePosterAdmin($id, $user, $request)
+    {
         $data = [
-            'id_user' => $request->id_user, //$user->id_user
+            'id_user' => $user->id_user,
             'status' => $request->status,
         ];
 
@@ -108,26 +158,22 @@ class PosterService implements PosterServiceInterface
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
-                // 'id_user' => 1,
-                'activity' => 'Merbarui artikel',
-                // 'description' => 'Merbarui artikel',
-                'description' => $user->email .  ' Merbarui artikel',
+                'activity' => 'Merbarui poster',
+                'description' => $user->email . ' Merbarui poster',
             ]);
 
             $this->notificationService->createNotificationForRole(
                 'Super Admin',
-                'Merbarui artikel',
-                $user->email . ' Merbarui artikel'
-                // 'Merbarui artikel'
+                'Merbarui poster',
+                $user->email . ' Merbarui poster'
             );
         }
 
         return $poster;
     }
 
-    public function updateStatusPoster($id, PosterRequest $request)
+    public function updatePosterSuperAdmin($id, $user, $request)
     {
-        $user = $this->userRepository->getUser();
         $poster = $this->posterRepository->updatePoster($id, [
             'status' => $request->status,
         ]);
@@ -144,10 +190,50 @@ class PosterService implements PosterServiceInterface
                 'title' => 'Merbarui status poster',
                 'description' => $user->email . ' Merbarui status poster',
             ]);
+
+            $this->pusherService->sendPusher(
+                [$poster->user->email],
+                'Merbarui status poster',
+                $user->email . ' Merbarui status poster'
+            );
         }
 
         return $poster;
     }
+
+    // public function updateStatusPoster($id, PosterRequest $request)
+    // {
+    //     // $user = $this->userRepository->getUser();
+    //     $poster = $this->posterRepository->updatePoster($id, [
+    //         'status' => $request->status,
+    //     ]);
+
+    //     if ($poster) {
+    //         $this->logRepository->createLog([
+    //             // 'id_user' => $user->id_user,
+    //             'id_user' => 1,
+    //             'activity' => 'Merbarui status poster',
+    //             // 'description' => $user->email . ' Merbarui status poster',
+    //             'description' => 'Merbarui status poster',
+    //         ]);
+
+    //         $this->notificationRepository->createNotification([
+    //             'id_user' => $poster->id_user,
+    //             'title' => 'Merbarui status poster',
+    //             // 'description' => $user->email . ' Merbarui status poster',
+    //             'description' => 'Merbarui status poster',
+    //         ]);
+
+    //         $this->pusherService->sendPusher(
+    //             [$poster->user->email],
+    //             'Merbarui status poster',
+    //             // $user->email . ' Merbarui status poster');
+    //             'Merbarui status poster'
+    //         );
+    //     }
+
+    //     return $poster;
+    // }
 
     public function deletePoster($id)
     {
@@ -157,17 +243,19 @@ class PosterService implements PosterServiceInterface
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
-                // 'id_user' => 1,
                 'activity' => 'Menghapus poster',
                 'description' => $user->email . ' Menghapus poster',
-                // 'description' => 'Menghapus poster',
             ]);
             $this->notificationRepository->createNotification([
                 'id_user' => $poster->id_user,
                 'title' => 'Menghapus poster',
-                // 'description' => 'Menghapus poster',
                 'description' => $user->email . ' Menghapus poster',
             ]);
+            $this->pusherService->sendPusher(
+                [$poster->user->email],
+                'Menghapus poster',
+                $user->email . ' Menghapus poster'
+            );
         }
         return $poster;
     }
@@ -185,17 +273,19 @@ class PosterService implements PosterServiceInterface
         if ($poster) {
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
-                // 'id_user' => 1,
                 'activity' => 'Mengembalikan poster',
                 'description' => $user->email . ' Mengembalikan poster',
-                // 'description' => 'Mengembalikan poster',
             ]);
             $this->notificationRepository->createNotification([
                 'id_user' => $poster->id_user,
                 'title' => 'Mengembalikan poster',
                 'description' => $user->email . ' Mengembalikan poster',
-                // 'description' => 'Mengembalikan poster',
             ]);
+            $this->pusherService->sendPusher(
+                [$poster->user->email],
+                'Mengembalikan poster',
+                $user->email . ' Mengembalikan poster'
+            );
         }
         return $poster;
     }
@@ -212,17 +302,19 @@ class PosterService implements PosterServiceInterface
 
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
-                // 'id_user' => 1,
                 'activity' => 'Menghapus permanen poster',
                 'description' => $user->email . ' Menghapus permanen poster',
-                // 'description' => 'Menghapus permanen poster',
             ]);
             $this->notificationRepository->createNotification([
                 'id_user' => $poster->id_user,
                 'title' => 'Menghapus permanen poster',
                 'description' => $user->email . ' Menghapus permanen poster',
-                // 'description' => 'Menghapus permanen poster',
             ]);
+            $this->pusherService->sendPusher(
+                [$poster->user->email],
+                'Menghapus permanen poster',
+                $user->email . ' Menghapus permanen poster'
+            );
         }
         return $poster;
     }
