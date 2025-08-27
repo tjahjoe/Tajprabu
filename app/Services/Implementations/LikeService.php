@@ -67,7 +67,7 @@ class LikeService implements LikeServiceInterface
                 'description' => $user->email . ' Menyukai artikel',
             ]);
             $this->pusherService->sendPusher(
-                [$artikel->id_user],
+                [$artikel->user->email],
                 'Menyukai artikel',
                 $user->email . ' Menyukai artikel'
             );
@@ -76,7 +76,15 @@ class LikeService implements LikeServiceInterface
 
     public function deleteLike($id)
     {
-        return $this->likeRepository->deleteLike($id);
+        $user = $this->userRepository->getUser();
+        $like = $this->likeRepository->deleteLike($id);
+        if ($like) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Membatalkan menyukai artikel',
+                'description' => $user->email . ' Membatalkan menyukai artikel',
+            ]);
+        }
     }
 }
 

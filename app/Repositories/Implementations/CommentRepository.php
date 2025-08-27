@@ -12,6 +12,11 @@ class CommentRepository implements CommentRepositoryInterface
         return CommentModel::get();
     }
 
+    public function getCommentById($id)
+    {
+        return CommentModel::with('user')->find($id);
+    }
+
     public function getCommentByArticle($id_article)
     {
         return CommentModel::find($id_article);

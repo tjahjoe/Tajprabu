@@ -23,7 +23,7 @@ class ArticleRepository implements ArticleRepositoryInterface
 
     public function getArticleById($id)
     {
-        return ArticleModel::find($id);
+        return ArticleModel::with('user')->find($id);
     }
 
     public function getTrendingArticles()

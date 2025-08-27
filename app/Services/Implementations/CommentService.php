@@ -48,7 +48,6 @@ class CommentService implements CommentServiceInterface
         $article = $this->articleRepository->getArticleById($request->id_article);
         $data = $request->only([
             'id_article',
-            // 'id_user',
             'comment',
         ]);
 
@@ -72,13 +71,26 @@ class CommentService implements CommentServiceInterface
                 'description' => $user->email . ' Membuat komentar baru',
             ]);
 
+            $emails = [
+                $article->user->email,
+            ];
+
             if ($request->filled('Id_parent')) {
                 $this->notificationRepository->createNotification([
                     'id_user' => $request->id_parent,
                     'activity' => 'Membuat komentar baru',
                     'description' => $user->email . ' Membuat komentar baru',
                 ]);
+
+                $perentComment = $this->commentRepository->getCommentById($request->id_parent);
+                $emails[] = $perentComment->user->email;
             }
+
+            $this->pusherService->sendPusher(
+                $emails,
+                'Membuat komentar baru',
+                $user->email . ' Membuat komentar baru'
+            );
         }
 
     }
@@ -86,6 +98,7 @@ class CommentService implements CommentServiceInterface
 
     public function updateComment($id, CommentRequest $request)
     {
+        $user = $this->userRepository->getUser();
         $data = $request->only([
             'id_article',
             'id_user',
@@ -96,11 +109,27 @@ class CommentService implements CommentServiceInterface
             $data['id_parent'] = $request->id_parent;
         }
 
-        return $this->commentRepository->updateComment($id, $data);
+        $comment = $this->commentRepository->updateComment($id, $data);
+
+        if ($comment) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Memperbarui komentar',
+                'description' => $user->email . ' Memperbarui komentar',
+            ]);
+        }
     }
     public function deleteComment($id)
     {
-        return $this->commentRepository->deleteComment($id);
+        $user = $this->userRepository->getUser();
+        $comment = $this->commentRepository->deleteComment($id);
+        if ($comment) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus komentar',
+                'description' => $user->email . ' Menghapus komentar',
+            ]);
+        }
     }
 
     public function getTrashedComments()
@@ -110,12 +139,28 @@ class CommentService implements CommentServiceInterface
 
     public function restoreComment($id)
     {
-        return $this->commentRepository->restoreComment($id);
+        $user = $this->userRepository->getUser();
+        $comment = $this->commentRepository->restoreComment($id);
+        if ($comment) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Mengembalikan komentar',
+                'description' => $user->email . ' Mengembalikan komentar',
+            ]);
+        }
     }
 
     public function destroyComment($id)
     {
-        return $this->commentRepository->destroyComment($id);
+        $user = $this->userRepository->getUser();
+        $comment = $this->commentRepository->destroyComment($id);
+        if ($comment) {
+            $this->logRepository->createLog([
+                'id_user' => $user->id_user,
+                'activity' => 'Menghapus permanen komentar',
+                'description' => $user->email . ' Menghapus permanen komentar',
+            ]);
+        }
     }
 }
 

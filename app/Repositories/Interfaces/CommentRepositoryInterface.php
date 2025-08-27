@@ -7,6 +7,7 @@ interface CommentRepositoryInterface
 
 
     public function getCommentByArticle($id_article);
+    public function getCommentById($id);
 
     public function createComment(array $data);
 
