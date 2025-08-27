@@ -22,7 +22,11 @@ interface ArticleServiceInterface
 
     public function updateArticle($id, ArticleRequest $request);
 
-    public function updateStatusArticle($id, ArticleRequest $request);
+    public function updateArticleSuperAdmin($id, $user, ArticleRequest $request);
+
+    public function updateArticleAdmin($id, $user, ArticleRequest $request);
+
+    // public function updateStatusArticle($id, ArticleRequest $request);
 
     public function deleteArticle($id);
 

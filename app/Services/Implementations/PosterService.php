@@ -60,7 +60,7 @@ class PosterService implements PosterServiceInterface
         $user = $this->userRepository->getUser();
 
         $poster = $this->posterRepository->createPoster([
-            'id_user' => $user->id_user, 
+            'id_user' => $user->id_user,
             'path' => $path,
         ]);
 
@@ -87,9 +87,9 @@ class PosterService implements PosterServiceInterface
         $user = $this->userRepository->getUser();
 
         if ($user->role->role == 'Super Admin') {
-            $this->updatePosterSuperAdmin($id, $user, $request);
+            return $this->updatePosterSuperAdmin($id, $user, $request);
         } else if ($user->role->role == 'Admin') {
-            $this->updatePosterAdmin($id, $user, $request);
+            return $this->updatePosterAdmin($id, $user, $request);
         }
         // $data = [
         //     'id_user' => $request->id_user, //$user->id_user
@@ -132,7 +132,7 @@ class PosterService implements PosterServiceInterface
         // return $poster;
     }
 
-    public function updatePosterAdmin($id, $user, $request)
+    public function updatePosterAdmin($id, $user, PosterRequest $request)
     {
         $data = [
             'id_user' => $user->id_user,
@@ -172,7 +172,7 @@ class PosterService implements PosterServiceInterface
         return $poster;
     }
 
-    public function updatePosterSuperAdmin($id, $user, $request)
+    public function updatePosterSuperAdmin($id, $user, PosterRequest $request)
     {
         $poster = $this->posterRepository->updatePoster($id, [
             'status' => $request->status,

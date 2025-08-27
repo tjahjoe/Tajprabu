@@ -5,6 +5,7 @@ namespace App\Services\Implementations;
 use App\Http\Requests\ArticleRequest;
 
 use App\Services\Interfaces\NotificationServiceInterface;
+use App\Services\Interfaces\PusherServiceInterface;
 
 use App\Repositories\Interfaces\ArticleRepositoryInterface;
 use App\Repositories\Interfaces\LogRepositoryInterface;
@@ -16,18 +17,21 @@ use Str;
 class ArticleService implements ArticleServiceInterface
 {
     protected $notificationService;
+    protected $pusherService;
     protected $articleRepository;
     protected $logRepository;
     protected $notificationRepository;
     protected $userRepository;
     public function __construct(
         NotificationServiceInterface $notificationService,
+        PusherServiceInterface $pusherService,
         ArticleRepositoryInterface $articleRepository,
         LogRepositoryInterface $logRepository,
         NotificationRepositoryInterface $notificationRepository,
         UserRepositoryInterface $userRepository
     ) {
         $this->notificationService = $notificationService;
+        $this->pusherService = $pusherService;
         $this->articleRepository = $articleRepository;
         $this->logRepository = $logRepository;
         $this->notificationRepository = $notificationRepository;
@@ -90,14 +94,22 @@ class ArticleService implements ArticleServiceInterface
             );
         }
         return $article;
-
     }
 
     public function updateArticle($id, ArticleRequest $request)
     {
-        $kodeArticle = Str::slug($request->title, '-');
         $user = $this->userRepository->getUser();
 
+        if ($user->role->role == 'Super Admin') {
+            return $this->updateArticleSuperAdmin($id, $user, $request);
+        } else if ($user->role->role == 'Admin') {
+            return $this->updateArticleAdmin($id, $user, $request);
+        }
+    }
+
+    public function updateArticleSuperAdmin($id, $user, ArticleRequest $request)
+    {
+        $kodeArticle = Str::slug($request->title, '-');
         $article = $this->articleRepository->updateArticle($id, [
             'id_user' => $user->id_user,
             'kode_article' => $kodeArticle,
@@ -109,7 +121,7 @@ class ArticleService implements ArticleServiceInterface
             $this->logRepository->createLog([
                 'id_user' => $user->id_user,
                 'activity' => 'Merbarui artikel',
-                'description' => $user->email .  'Merbarui artikel',
+                'description' => $user->email . 'Merbarui artikel',
             ]);
 
             $this->notificationService->createNotificationForRole(
@@ -121,9 +133,8 @@ class ArticleService implements ArticleServiceInterface
         return $article;
     }
 
-    public function updateStatusArticle($id, ArticleRequest $request)
+    public function updateArticleAdmin($id, $user, ArticleRequest $request)
     {
-        $user = $this->userRepository->getUser();
         $article = $this->articleRepository->updateArticle($id, [
             'status' => $request->status,
         ]);
@@ -143,6 +154,28 @@ class ArticleService implements ArticleServiceInterface
         }
     }
 
+    // public function updateStatusArticle($id, ArticleRequest $request)
+    // {
+    //     $user = $this->userRepository->getUser();
+    //     $article = $this->articleRepository->updateArticle($id, [
+    //         'status' => $request->status,
+    //     ]);
+
+    //     if ($article) {
+    //         $this->logRepository->createLog([
+    //             'id_user' => $user->id_user,
+    //             'activity' => 'Merbarui status artikel',
+    //             'description' => $user->email . ' Merbarui status artikel',
+    //         ]);
+
+    //         $this->notificationRepository->createNotification([
+    //             'id_user' => $article->id_user,
+    //             'title' => 'Merbarui status artikel',
+    //             'description' => $user->email . ' Merbarui status artikel',
+    //         ]);
+    //     }
+    // }
+
     public function deleteArticle($id)
     {
         $user = $this->userRepository->getUser();
@@ -159,6 +192,11 @@ class ArticleService implements ArticleServiceInterface
                 'title' => 'Menghapus artikel',
                 'description' => $user->email . ' Menghapus artikel',
             ]);
+            $this->pusherService->sendPusher(
+                [$article->user->email],
+                'Menghapus artikel',
+                $user->email . ' Menghapus artikel'
+            );
         }
         return $article;
     }
@@ -183,6 +221,11 @@ class ArticleService implements ArticleServiceInterface
                 'title' => 'Mengembalikan artikel',
                 'description' => $user->email . ' Mengembalikan artikel',
             ]);
+            $this->pusherService->sendPusher(
+                [$article->user->email],
+                'Mengembalikan artikel',
+                $user->email . ' Mengembalikan artikel'
+            );
         }
         return $article;
     }
@@ -202,6 +245,11 @@ class ArticleService implements ArticleServiceInterface
                 'title' => 'Menghapus permanen artikel',
                 'description' => $user->email . ' Menghapus permanen artikel',
             ]);
+            $this->pusherService->sendPusher(
+                [$article->user->email],
+                'Menghapus permanen artikel',
+                $user->email . ' Menghapus permanen artikel'
+            );
         }
         return $article;
     }

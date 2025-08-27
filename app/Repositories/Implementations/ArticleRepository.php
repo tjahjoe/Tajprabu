@@ -64,14 +64,14 @@ class ArticleRepository implements ArticleRepositoryInterface
 
     public function updateArticle($id, array $data)
     {
-        $article = ArticleModel::findOrFail($id);
+        $article = ArticleModel::with('user')->findOrFail($id);
         $article->update($data);
         return $article;
     }
 
     public function deleteArticle($id)
     {
-        $article = ArticleModel::findOrFail($id);
+        $article = ArticleModel::with('user')->findOrFail($id);
         $article->delete();
         return $article;
     }
@@ -83,14 +83,14 @@ class ArticleRepository implements ArticleRepositoryInterface
 
     public function restoreArticle($id)
     {
-        $article = ArticleModel::withTrashed()->findOrFail($id);
+        $article = ArticleModel::withTrashed()->with('user')->findOrFail($id);
         $article->restore();
         return $article;
     }
 
     public function destroyArticle($id)
     {
-        $article = ArticleModel::withTrashed()->findOrFail($id);
+        $article = ArticleModel::withTrashed()->with('user')->findOrFail($id);
         $article->forceDelete();
         return $article;
     }
