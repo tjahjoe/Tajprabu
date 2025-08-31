@@ -96,3 +96,29 @@ Route::delete('/posters/{id}/delete', [PosterController::class, 'deletePoster'])
 Route::get('/posters/show/trashed', [PosterController::class, 'getTrashedPosters']);
 Route::post('/posters/{id}/restore', [PosterController::class, 'restorePoster']);
 Route::delete('/posters/{id}/destroy', [PosterController::class, 'destroyPoster']);
+
+// Route::get('/notification')
+Route::get('/notification', function () {
+    // $contents = $request->input('contents');
+    //     $subscriptionIds = $request->input('subscription_ids');
+    //     $url = $request->input('url');
+
+    try {
+        $response = Http::withHeaders([
+            'Authorization' => 'Basic ' . env('ONESIGNAL_REST_API_KEY'),
+            'Content-Type' => 'application/json',
+        ])->post('https://onesignal.com/api/v1/notifications', [
+                    'app_id' => env('ONESIGNAL_APP_ID'),
+                    'include_player_ids' => [
+                        '272810f3-1e66-4bb2-ad8f-7cec57656cd6'
+                    ],
+                    'headings' => ['en' => 'Test Notif'],
+                    'contents' => ['en' => 'Halo ini notifikasi dari Laravel!'],
+                ]);
+
+        return response()->json($response->json());
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+
+});

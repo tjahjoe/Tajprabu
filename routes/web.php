@@ -24,8 +24,8 @@ Route::get('/', function () {
 
 // Route::post('/upload', [UploadController::class, 'upload']);
 
-// Route::get('oauth/{provider}', [OauthController::class, 'redirectToProvider']);
-// Route::get('oauth/{provider}/callback', [OauthController::class, 'handleProviderCallback']);
+Route::get('oauth/{provider}', [OauthController::class, 'redirectToProvider']);
+Route::get('oauth/{provider}/callback', [OauthController::class, 'handleProviderCallback']);
 
 Route::get('/sendAll', [PusherController::class, 'publishToInterests']);
 // Route::get('/sendUser', [PusherController::class, 'sendNotificationToUser']);
